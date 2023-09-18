@@ -75,4 +75,26 @@ public class DiscographyControllerTest {
 		verifyNoMoreInteractions(musicianRepository);
 	}
 
+	@Test
+	public void testDeleteMusicianWhenMusicianExist() {
+		Musician toDelete = new Musician("1", "toDelete");
+		when(musicianRepository.findMusicianById("1")).thenReturn(toDelete);
+		controller.deleteMusician(toDelete);
+		InOrder order = inOrder(view, musicianRepository, albumRepository);
+		order.verify(musicianRepository).deleteMusician("1");
+		order.verify(albumRepository).deleteAlbumsOfMusician("1");
+		order.verify(view).musicianRemoved(toDelete);
+	}
+
+	@Test
+	public void testDeleteMusicianWhenMusicianDoesNotExist() {
+		Musician toDelete = new Musician("1", "toDelete");
+		when(musicianRepository.findMusicianById("1")).thenReturn(null);
+		controller.deleteMusician(toDelete);
+		InOrder order = inOrder(view, albumRepository);
+		order.verify(albumRepository).deleteAlbumsOfMusician("1");
+		order.verify(view).showErrorMusicianNotFound("Not exist a musician with id 1", toDelete);
+		verifyNoMoreInteractions(musicianRepository);
+	}
+
 }

@@ -33,4 +33,15 @@ public class DiscographyController {
 		view.musicianAdded(newMusician);
 	}
 
+	public void deleteMusician(Musician toDelete) {
+		if (musicianRepository.findMusicianById(toDelete.getId()) == null) {
+			albumRepository.deleteAlbumsOfMusician(toDelete.getId());
+			view.showErrorMusicianNotFound("Not exist a musician with id " + toDelete.getId(), toDelete);
+			return;
+		}
+		musicianRepository.deleteMusician(toDelete.getId());
+		albumRepository.deleteAlbumsOfMusician(toDelete.getId());
+		view.musicianRemoved(toDelete);
+	}
+
 }

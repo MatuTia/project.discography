@@ -12,4 +12,8 @@ public interface DiscographyView {
 
 	void showErrorDuplicateMusicianId(String message, Musician existingMusician);
 
+	void musicianRemoved(Musician removed);
+
+	void showErrorMusicianNotFound(String message, Musician selectedMusician);
+
 }

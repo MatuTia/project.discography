@@ -12,4 +12,6 @@ public interface MusicianRepository {
 
 	void saveMusician(Musician toSave);
 
+	void deleteMusician(String id);
+
 }
