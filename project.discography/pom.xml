@@ -15,6 +15,7 @@
 		<cucumber>7.14.0</cucumber>
 		<assertj-swing>3.17.1</assertj-swing>
 		<site.plugin>3.9.1</site.plugin>
+		<pitest.plugin>1.14.4</pitest.plugin>
 		<surefire.plugin>3.1.2</surefire.plugin>
 		<failsafe.plugin>2.22.2</failsafe.plugin>
 		<build.helper.plugin>3.4.0</build.helper.plugin>
@@ -137,6 +138,25 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-site-plugin</artifactId>
 					<version>${site.plugin}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.pitest</groupId>
+					<artifactId>pitest-maven</artifactId>
+					<version>${pitest.plugin}</version>
+					<configuration>
+						<targetClasses>
+							<targetClasse>
+								project.discography.controller.*</targetClasse>
+						</targetClasses>
+						<targetTests>
+							<targetTest>
+								project.discography.controller.DiscographyControllerTest</targetTest>
+						</targetTests>
+						<mutators>
+							<mutator>STRONGER</mutator>
+						</mutators>
+						<mutationThreshold>100</mutationThreshold>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
