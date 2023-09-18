@@ -17,6 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoSession;
 import org.mockito.quality.Strictness;
 
+import project.discography.model.Album;
 import project.discography.model.Musician;
 import project.discography.repository.AlbumRepository;
 import project.discography.repository.MusicianRepository;
@@ -118,6 +119,27 @@ public class DiscographyControllerTest {
 		order.verify(albumRepository).deleteAlbumsOfMusician("1");
 		order.verify(view).showErrorMusicianNotFound("Not exist a musician with id 1", toUpdate);
 		verifyNoMoreInteractions(musicianRepository);
+	}
+
+	@Test
+	public void testMusicianDiscographyWhenMusicianExist() {
+		Musician musician = new Musician("1", "aMusician");
+		List<Album> albums = Arrays.asList(new Album("A", "anAlbum", "1"));
+		when(musicianRepository.findMusicianById("1")).thenReturn(musician);
+		when(albumRepository.findAllAlbumsOfMusician("1")).thenReturn(albums);
+		controller.musicianDiscography(musician);
+		verify(view).showAllAlbums(albums);
+	}
+
+	@Test
+	public void testMusicianDiscographyWhenMusicianDoesNotExist() {
+		Musician musician = new Musician("1", "aMusician");
+		when(musicianRepository.findMusicianById("1")).thenReturn(null);
+		controller.musicianDiscography(musician);
+		InOrder order = inOrder(view, albumRepository);
+		order.verify(albumRepository).deleteAlbumsOfMusician("1");
+		order.verify(view).showErrorMusicianNotFound("Not exist a musician with id 1", musician);
+		verifyNoMoreInteractions(albumRepository);
 	}
 
 }

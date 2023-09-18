@@ -2,6 +2,7 @@ package project.discography.view;
 
 import java.util.List;
 
+import project.discography.model.Album;
 import project.discography.model.Musician;
 
 public interface DiscographyView {
@@ -17,5 +18,7 @@ public interface DiscographyView {
 	void showErrorMusicianNotFound(String message, Musician selectedMusician);
 
 	void musicianUpdated(Musician toUpdate, Musician updated);
+
+	void showAllAlbums(List<Album> albums);
 
 }

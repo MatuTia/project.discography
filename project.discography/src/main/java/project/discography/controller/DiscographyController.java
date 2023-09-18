@@ -48,6 +48,12 @@ public class DiscographyController {
 		}
 	}
 
+	public void musicianDiscography(Musician musician) {
+		if (existMusician(musician)) {
+			view.showAllAlbums(albumRepository.findAllAlbumsOfMusician(musician.getId()));
+		}
+	}
+
 	private boolean existMusician(Musician musician) {
 		if (musicianRepository.findMusicianById(musician.getId()) == null) {
 			albumRepository.deleteAlbumsOfMusician(musician.getId());
