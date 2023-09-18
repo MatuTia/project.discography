@@ -1,5 +1,6 @@
 package project.discography.controller;
 
+import project.discography.model.Album;
 import project.discography.model.Musician;
 import project.discography.repository.AlbumRepository;
 import project.discography.repository.MusicianRepository;
@@ -51,6 +52,18 @@ public class DiscographyController {
 	public void musicianDiscography(Musician musician) {
 		if (existMusician(musician)) {
 			view.showAllAlbums(albumRepository.findAllAlbumsOfMusician(musician.getId()));
+		}
+	}
+
+	public void newAlbum(Musician musician, Album newAlbum) {
+		if (existMusician(musician)) {
+			Album existingAlbum = albumRepository.findAlbumById(newAlbum.getId());
+			if (existingAlbum != null) {
+				view.showErrorDuplicateAlbumId("Already exist an album with id " + newAlbum.getId(), existingAlbum);
+				return;
+			}
+			albumRepository.saveAlbum(newAlbum);
+			view.albumAdded(newAlbum);
 		}
 	}
 

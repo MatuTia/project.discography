@@ -10,4 +10,8 @@ public interface AlbumRepository {
 
 	List<Album> findAllAlbumsOfMusician(String musician);
 
+	Album findAlbumById(String id);
+
+	void saveAlbum(Album toSave);
+
 }

@@ -21,4 +21,8 @@ public interface DiscographyView {
 
 	void showAllAlbums(List<Album> albums);
 
+	void albumAdded(Album added);
+
+	void showErrorDuplicateAlbumId(String message, Album existingAlbum);
+
 }

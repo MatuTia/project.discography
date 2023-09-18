@@ -142,4 +142,40 @@ public class DiscographyControllerTest {
 		verifyNoMoreInteractions(albumRepository);
 	}
 
+	@Test
+	public void testNewAlbumWhenMusicianExistAndAlbumDoesNotAlreadyExist() {
+		Musician musician = new Musician("1", "aMusician");
+		Album newAlbum = new Album("A", "newAlbum", "1");
+		when(musicianRepository.findMusicianById("1")).thenReturn(musician);
+		when(albumRepository.findAlbumById("A")).thenReturn(null);
+		controller.newAlbum(musician, newAlbum);
+		InOrder order = inOrder(view, albumRepository);
+		order.verify(albumRepository).saveAlbum(newAlbum);
+		order.verify(view).albumAdded(newAlbum);
+	}
+
+	@Test
+	public void testNewAlbumWhenMusicianDoesNotExist() {
+		Musician musician = new Musician("1", "aMusician");
+		Album newAlbum = new Album("A", "newAlbum", "1");
+		when(musicianRepository.findMusicianById("1")).thenReturn(null);
+		controller.newAlbum(musician, newAlbum);
+		InOrder order = inOrder(view, albumRepository);
+		order.verify(albumRepository).deleteAlbumsOfMusician("1");
+		order.verify(view).showErrorMusicianNotFound("Not exist a musician with id 1", musician);
+		verifyNoMoreInteractions(albumRepository);
+	}
+
+	@Test
+	public void testNewAlbumWhenMusicianExistAndAlbumDoesAlreadyExist() {
+		Musician musician = new Musician("1", "aMusician");
+		Album newAlbum = new Album("A", "newAlbum", "1");
+		Album existingAlbum = new Album("A", "existingAlbum", "1");
+		when(musicianRepository.findMusicianById("1")).thenReturn(musician);
+		when(albumRepository.findAlbumById("A")).thenReturn(existingAlbum);
+		controller.newAlbum(musician, newAlbum);
+		verify(view).showErrorDuplicateAlbumId("Already exist an album with id A", existingAlbum);
+		verifyNoMoreInteractions(albumRepository);
+	}
+
 }
