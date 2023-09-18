@@ -16,4 +16,6 @@ public interface AlbumRepository {
 
 	void deleteAlbum(String id);
 
+	void updateAlbum(String id, Album updated);
+
 }

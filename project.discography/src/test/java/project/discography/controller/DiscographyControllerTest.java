@@ -213,4 +213,42 @@ public class DiscographyControllerTest {
 		verifyNoMoreInteractions(albumRepository);
 	}
 
+	@Test
+	public void testUpdateAlbumWhenMusiciaExistAndAlbumExist() {
+		Musician musician = new Musician("1", "aMusician");
+		Album toUpdate = new Album("A", "toUpdate", "1");
+		Album updated = new Album("A", "updated", "1");
+		when(musicianRepository.findMusicianById("1")).thenReturn(musician);
+		when(albumRepository.findAlbumById("A")).thenReturn(toUpdate);
+		controller.updateAlbum(musician, toUpdate, updated);
+		InOrder order = inOrder(view, albumRepository);
+		order.verify(albumRepository).updateAlbum("A", updated);
+		order.verify(view).albumUpdated(toUpdate, updated);
+	}
+
+	@Test
+	public void testUpdateAlbumWhenMusicianDoesNotExits() {
+		Musician musician = new Musician("1", "aMusician");
+		Album toUpdate = new Album("A", "toUpdate", "1");
+		Album updated = new Album("A", "updated", "1");
+		when(musicianRepository.findMusicianById("1")).thenReturn(null);
+		controller.updateAlbum(musician, toUpdate, updated);
+		InOrder order = inOrder(view, albumRepository);
+		order.verify(albumRepository).deleteAlbumsOfMusician("1");
+		order.verify(view).showErrorMusicianNotFound("Not exist a musician with id 1", musician);
+		verifyNoMoreInteractions(albumRepository);
+	}
+
+	@Test
+	public void testUpdateAlbumWhenMusicianExistAndAlbumDoesNotExist() {
+		Musician musician = new Musician("1", "aMusician");
+		Album toUpdate = new Album("A", "toUpdate", "1");
+		Album updated = new Album("A", "updated", "1");
+		when(musicianRepository.findMusicianById("1")).thenReturn(musician);
+		when(albumRepository.findAlbumById("A")).thenReturn(null);
+		controller.updateAlbum(musician, toUpdate, updated);
+		verify(view).showErrorAlbumNotFound("Not exist an album with id A", toUpdate);
+		verifyNoMoreInteractions(albumRepository);
+	}
+
 }

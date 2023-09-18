@@ -68,13 +68,16 @@ public class DiscographyController {
 	}
 
 	public void deleteAlbum(Musician musician, Album toDelete) {
-		if (existMusician(musician)) {
-			if (albumRepository.findAlbumById(toDelete.getId()) == null) {
-				view.showErrorAlbumNotFound("Not exist an album with id " + toDelete.getId(), toDelete);
-				return;
-			}
+		if (existMusician(musician) && existAlbum(toDelete)) {
 			albumRepository.deleteAlbum(toDelete.getId());
 			view.albumRemoved(toDelete);
+		}
+	}
+
+	public void updateAlbum(Musician musician, Album toUpdate, Album updated) {
+		if (existMusician(musician) && existAlbum(toUpdate)) {
+			albumRepository.updateAlbum(toUpdate.getId(), updated);
+			view.albumUpdated(toUpdate, updated);
 		}
 	}
 
@@ -82,6 +85,14 @@ public class DiscographyController {
 		if (musicianRepository.findMusicianById(musician.getId()) == null) {
 			albumRepository.deleteAlbumsOfMusician(musician.getId());
 			view.showErrorMusicianNotFound("Not exist a musician with id " + musician.getId(), musician);
+			return false;
+		}
+		return true;
+	}
+
+	private boolean existAlbum(Album album) {
+		if (albumRepository.findAlbumById(album.getId()) == null) {
+			view.showErrorAlbumNotFound("Not exist an album with id " + album.getId(), album);
 			return false;
 		}
 		return true;

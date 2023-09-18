@@ -29,4 +29,6 @@ public interface DiscographyView {
 
 	void showErrorAlbumNotFound(String message, Album selectedAlbum);
 
+	void albumUpdated(Album toUpdate, Album updated);
+
 }
