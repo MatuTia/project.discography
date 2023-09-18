@@ -15,6 +15,7 @@
 		<cucumber>7.14.0</cucumber>
 		<assertj-swing>3.17.1</assertj-swing>
 		<site.plugin>3.9.1</site.plugin>
+		<jacoco.plugin>0.8.9</jacoco.plugin>
 		<pitest.plugin>1.14.4</pitest.plugin>
 		<surefire.plugin>3.1.2</surefire.plugin>
 		<failsafe.plugin>2.22.2</failsafe.plugin>
@@ -158,6 +159,24 @@
 						<mutationThreshold>100</mutationThreshold>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco.plugin}</version>
+					<configuration>
+						<excludes>
+							<exclude>**/model/**</exclude>
+						</excludes>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>prepare-agent</goal>
+								<goal>report</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -184,4 +203,18 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>jacoco</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
