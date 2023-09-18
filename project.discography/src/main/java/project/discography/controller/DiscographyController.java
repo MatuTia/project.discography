@@ -67,6 +67,17 @@ public class DiscographyController {
 		}
 	}
 
+	public void deleteAlbum(Musician musician, Album toDelete) {
+		if (existMusician(musician)) {
+			if (albumRepository.findAlbumById(toDelete.getId()) == null) {
+				view.showErrorAlbumNotFound("Not exist an album with id " + toDelete.getId(), toDelete);
+				return;
+			}
+			albumRepository.deleteAlbum(toDelete.getId());
+			view.albumRemoved(toDelete);
+		}
+	}
+
 	private boolean existMusician(Musician musician) {
 		if (musicianRepository.findMusicianById(musician.getId()) == null) {
 			albumRepository.deleteAlbumsOfMusician(musician.getId());

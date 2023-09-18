@@ -178,4 +178,39 @@ public class DiscographyControllerTest {
 		verifyNoMoreInteractions(albumRepository);
 	}
 
+	@Test
+	public void testDeleteAlbumWhenMusicianExistAndAlbumExist() {
+		Musician musician = new Musician("1", "aMusician");
+		Album toDelete = new Album("A", "toDelete", "1");
+		when(musicianRepository.findMusicianById("1")).thenReturn(musician);
+		when(albumRepository.findAlbumById("A")).thenReturn(toDelete);
+		controller.deleteAlbum(musician, toDelete);
+		InOrder order = inOrder(view, albumRepository);
+		order.verify(albumRepository).deleteAlbum("A");
+		order.verify(view).albumRemoved(toDelete);
+	}
+
+	@Test
+	public void testDeleteAlbumWhenMusicianDoesNotExits() {
+		Musician musician = new Musician("1", "aMusician");
+		Album toDelete = new Album("A", "toDelete", "1");
+		when(musicianRepository.findMusicianById("1")).thenReturn(null);
+		controller.deleteAlbum(musician, toDelete);
+		InOrder order = inOrder(view, albumRepository);
+		order.verify(albumRepository).deleteAlbumsOfMusician("1");
+		order.verify(view).showErrorMusicianNotFound("Not exist a musician with id 1", musician);
+		verifyNoMoreInteractions(albumRepository);
+	}
+
+	@Test
+	public void testDeleteAlbumWhenMusicianExistAndAlbumDoesNotExist() {
+		Musician musician = new Musician("1", "aMusician");
+		Album toDelete = new Album("A", "toDelete", "1");
+		when(musicianRepository.findMusicianById("1")).thenReturn(musician);
+		when(albumRepository.findAlbumById("A")).thenReturn(null);
+		controller.deleteAlbum(musician, toDelete);
+		verify(view).showErrorAlbumNotFound("Not exist an album with id A", toDelete);
+		verifyNoMoreInteractions(albumRepository);
+	}
+
 }

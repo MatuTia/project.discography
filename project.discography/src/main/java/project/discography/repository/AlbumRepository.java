@@ -14,4 +14,6 @@ public interface AlbumRepository {
 
 	void saveAlbum(Album toSave);
 
+	void deleteAlbum(String id);
+
 }

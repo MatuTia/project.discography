@@ -25,4 +25,8 @@ public interface DiscographyView {
 
 	void showErrorDuplicateAlbumId(String message, Album existingAlbum);
 
+	void albumRemoved(Album removed);
+
+	void showErrorAlbumNotFound(String message, Album selectedAlbum);
+
 }
