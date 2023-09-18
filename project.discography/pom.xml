@@ -10,7 +10,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>8</maven.compiler.source>
 		<maven.compiler.target>8</maven.compiler.target>
+		<junit>4.13.2</junit>
+		<mockito>4.9.0</mockito>
 		<cucumber>7.14.0</cucumber>
+		<assertj-swing>3.17.1</assertj-swing>
 		<site.plugin>3.9.1</site.plugin>
 		<surefire.plugin>3.1.2</surefire.plugin>
 		<failsafe.plugin>2.22.2</failsafe.plugin>
@@ -19,6 +22,24 @@
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-swing-junit</artifactId>
+			<version>${assertj-swing}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>io.cucumber</groupId>
 			<artifactId>cucumber-java</artifactId>
