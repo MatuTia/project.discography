@@ -8,4 +8,8 @@ public interface MusicianRepository {
 
 	List<Musician> findAllMusicians();
 
+	Musician findMusicianById(String id);
+
+	void saveMusician(Musician toSave);
+
 }

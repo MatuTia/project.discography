@@ -1,6 +1,8 @@
 package project.discography.controller;
 
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -9,6 +11,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoSession;
@@ -50,6 +53,26 @@ public class DiscographyControllerTest {
 		when(musicianRepository.findAllMusicians()).thenReturn(musicians);
 		controller.allMusicians();
 		verify(view).showAllMusicians(musicians);
+	}
+
+	@Test
+	public void testNewMusicianWhenMusicianDoesNotAlreadyExist() {
+		Musician newMusician = new Musician("1", "newMusician");
+		when(musicianRepository.findMusicianById("1")).thenReturn(null);
+		controller.newMusician(newMusician);
+		InOrder order = inOrder(view, musicianRepository);
+		order.verify(musicianRepository).saveMusician(newMusician);
+		order.verify(view).musicianAdded(newMusician);
+	}
+
+	@Test
+	public void testNewMusicianWhenMusicianDoesAlreadyExist() {
+		Musician newMusician = new Musician("1", "newMusician");
+		Musician existingMusician = new Musician("1", "existingMusician");
+		when(musicianRepository.findMusicianById("1")).thenReturn(existingMusician);
+		controller.newMusician(newMusician);
+		verify(view).showErrorDuplicateMusicianId("Already exist a musician with id 1", existingMusician);
+		verifyNoMoreInteractions(musicianRepository);
 	}
 
 }

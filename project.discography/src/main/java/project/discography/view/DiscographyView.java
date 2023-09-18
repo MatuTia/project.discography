@@ -8,4 +8,8 @@ public interface DiscographyView {
 
 	void showAllMusicians(List<Musician> musicians);
 
+	void musicianAdded(Musician added);
+
+	void showErrorDuplicateMusicianId(String message, Musician existingMusician);
+
 }
