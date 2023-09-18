@@ -16,4 +16,6 @@ public interface DiscographyView {
 
 	void showErrorMusicianNotFound(String message, Musician selectedMusician);
 
+	void musicianUpdated(Musician toUpdate, Musician updated);
+
 }

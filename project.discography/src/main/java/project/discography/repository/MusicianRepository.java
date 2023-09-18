@@ -14,4 +14,6 @@ public interface MusicianRepository {
 
 	void deleteMusician(String id);
 
+	void updateMusician(String id, Musician updated);
+
 }

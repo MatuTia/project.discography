@@ -34,14 +34,27 @@ public class DiscographyController {
 	}
 
 	public void deleteMusician(Musician toDelete) {
-		if (musicianRepository.findMusicianById(toDelete.getId()) == null) {
+		if (existMusician(toDelete)) {
+			musicianRepository.deleteMusician(toDelete.getId());
 			albumRepository.deleteAlbumsOfMusician(toDelete.getId());
-			view.showErrorMusicianNotFound("Not exist a musician with id " + toDelete.getId(), toDelete);
-			return;
+			view.musicianRemoved(toDelete);
 		}
-		musicianRepository.deleteMusician(toDelete.getId());
-		albumRepository.deleteAlbumsOfMusician(toDelete.getId());
-		view.musicianRemoved(toDelete);
+	}
+
+	public void updateMusician(Musician toUpdate, Musician updated) {
+		if (existMusician(toUpdate)) {
+			musicianRepository.updateMusician(toUpdate.getId(), updated);
+			view.musicianUpdated(toUpdate, updated);
+		}
+	}
+
+	private boolean existMusician(Musician musician) {
+		if (musicianRepository.findMusicianById(musician.getId()) == null) {
+			albumRepository.deleteAlbumsOfMusician(musician.getId());
+			view.showErrorMusicianNotFound("Not exist a musician with id " + musician.getId(), musician);
+			return false;
+		}
+		return true;
 	}
 
 }

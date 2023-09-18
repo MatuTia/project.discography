@@ -97,4 +97,27 @@ public class DiscographyControllerTest {
 		verifyNoMoreInteractions(musicianRepository);
 	}
 
+	@Test
+	public void testUpdateMusicianWhenMusicianExist() {
+		Musician toUpdate = new Musician("1", "toUpdate");
+		Musician updated = new Musician("1", "updated");
+		when(musicianRepository.findMusicianById("1")).thenReturn(toUpdate);
+		controller.updateMusician(toUpdate, updated);
+		InOrder order = inOrder(view, musicianRepository);
+		order.verify(musicianRepository).updateMusician("1", updated);
+		order.verify(view).musicianUpdated(toUpdate, updated);
+	}
+
+	@Test
+	public void testUpdateMusicianWhenMusicianDoesNotExist() {
+		Musician toUpdate = new Musician("1", "toUpdate");
+		Musician updated = new Musician("1", "updated");
+		when(musicianRepository.findMusicianById("1")).thenReturn(null);
+		controller.updateMusician(toUpdate, updated);
+		InOrder order = inOrder(view, albumRepository);
+		order.verify(albumRepository).deleteAlbumsOfMusician("1");
+		order.verify(view).showErrorMusicianNotFound("Not exist a musician with id 1", toUpdate);
+		verifyNoMoreInteractions(musicianRepository);
+	}
+
 }
