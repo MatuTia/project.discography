@@ -11,9 +11,11 @@
 		<maven.compiler.source>8</maven.compiler.source>
 		<maven.compiler.target>8</maven.compiler.target>
 		<cucumber>7.14.0</cucumber>
+		<site.plugin>3.9.1</site.plugin>
 		<surefire.plugin>3.1.2</surefire.plugin>
 		<failsafe.plugin>2.22.2</failsafe.plugin>
 		<build.helper.plugin>3.4.0</build.helper.plugin>
+		<surefire.report.plugin>3.1.2</surefire.report.plugin>
 	</properties>
 
 	<dependencies>
@@ -105,6 +107,16 @@
 						</execution>
 					</executions>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-report-plugin</artifactId>
+					<version>${surefire.report.plugin}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>${site.plugin}</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -120,6 +132,14 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
