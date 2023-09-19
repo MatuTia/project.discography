@@ -39,7 +39,7 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
 
     - name: Buildd with Maven
-      run: mvn verify -Pjacoco
+      run: xvfb-run mvn verify -Pjacoco
       working-directory: ${{ env.workdir }}
 
     - name: Set up JDK 17

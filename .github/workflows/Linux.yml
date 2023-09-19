@@ -10,10 +10,13 @@ jobs:
       workdir: project.discography
     strategy:
       matrix:
-        java:
-        - 8
-        - 11
-        - 17
+        include:
+        - java: 8
+        - java: 11
+          argLine: -DmyArgLine="--illegal-access=deny --add-opens java.base/java.util=ALL-UNNAMED"
+        - java: 17
+          argLine: -DmyArgLine="--add-opens java.base/java.util=ALL-UNNAMED"
+
 
     name: Build CI with Maven and Java ${{ matrix.java }}
     steps:
@@ -32,8 +35,12 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml', '**/*.yml') }}
         restore-keys: ${{ runner.os }}-m2-
 
+    - name: Install at-spi2-core
+      run: sudo apt install at-spi2-core
+      if: ${{ matrix.java != 8}}
+
     - name: Build with Maven
-      run: mvn verify
+      run: xvfb-run mvn verify ${{ matrix.argLine }}
       working-directory: ${{ env.workdir }}
 
     - name: Generate JUnit Report
