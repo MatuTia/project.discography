@@ -83,4 +83,12 @@ public class DiscographyControllerIT {
 		verify(view).musicianAdded(newMusician);
 	}
 
+	@Test
+	public void testDeleteMusician() {
+		Musician toDelete = new Musician("1", "toDelete");
+		musicianRepository.saveMusician(toDelete);
+		controller.deleteMusician(toDelete);
+		verify(view).musicianRemoved(toDelete);
+	}
+
 }
