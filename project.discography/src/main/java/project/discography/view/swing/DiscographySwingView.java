@@ -26,7 +26,7 @@ public class DiscographySwingView extends JFrame {
 
 	private JPanel contentPane;
 
-	private DiscographyController controller;
+	private transient DiscographyController controller;
 
 	private JTextField textFieldIdMusician;
 	private JTextField textFieldNameMusician;
@@ -53,7 +53,7 @@ public class DiscographySwingView extends JFrame {
 
 	public DiscographySwingView() {
 		setTitle("Discography View");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setBounds(100, 100, 520, 560);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -112,9 +112,9 @@ public class DiscographySwingView extends JFrame {
 		gbc_scrollPaneMusician.gridy = 2;
 		contentPane.add(scrollPaneMusician, gbc_scrollPaneMusician);
 
-		musicianListModel = new DefaultListModel<Musician>();
+		musicianListModel = new DefaultListModel<>();
 
-		listMusicians = new JList<Musician>(getMusicianListModel());
+		listMusicians = new JList<>(getMusicianListModel());
 		listMusicians.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPaneMusician.setViewportView(listMusicians);
 		listMusicians.setName("musicians");
@@ -190,9 +190,9 @@ public class DiscographySwingView extends JFrame {
 		gbc_scrollPaneAlbum.gridy = 6;
 		contentPane.add(scrollPaneAlbum, gbc_scrollPaneAlbum);
 
-		albumListModel = new DefaultListModel<Album>();
+		albumListModel = new DefaultListModel<>();
 
-		listAlbums = new JList<Album>(getAlbumListModel());
+		listAlbums = new JList<>(getAlbumListModel());
 		listAlbums.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listAlbums.setEnabled(false);
 		scrollPaneAlbum.setViewportView(listAlbums);
