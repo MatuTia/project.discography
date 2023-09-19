@@ -21,6 +21,7 @@ import org.mockito.MockitoSession;
 import org.mockito.quality.Strictness;
 
 import project.discography.controller.DiscographyController;
+import project.discography.model.Album;
 import project.discography.model.Musician;
 
 @RunWith(GUITestRunner.class)
@@ -179,6 +180,58 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		verify(controller).musicianDiscography(musician);
 		window.list("musicians").clearSelection();
 		verifyNoMoreInteractions(controller);
+	}
+
+	@Test
+	@GUITest
+	public void testAddAlbumButtonShouldBeEnableWhenMusicianIsSelectedAndAlbumTextFieldsAreNotEmpty() {
+		GuiActionRunner.execute(() -> view.getMusicianListModel().addElement(new Musician("1", "aMusician")));
+		window.list("musicians").selectItem(0);
+		window.textBox("idAlbum").enterText("A");
+		window.textBox("titleAlbum").enterText("newAlbum");
+		window.button(JButtonMatcher.withText("Add Album")).requireEnabled();
+	}
+
+	@Test
+	@GUITest
+	public void testAddAlbumButtonShouldBeDisableWhenAtLeastOneFieldIsEmptyOrMusicianIsNotSelected() {
+		JListFixture list = window.list("musicians");
+		JTextComponentFixture id = window.textBox("idAlbum");
+		JTextComponentFixture title = window.textBox("titleAlbum");
+		JButtonFixture button = window.button(JButtonMatcher.withText("Add Album"));
+		GuiActionRunner.execute(() -> view.getMusicianListModel().addElement(new Musician("1", "aMusician")));
+
+		id.enterText("A");
+		title.enterText("newAlbum");
+		button.requireDisabled();
+
+		id.setText("");
+		title.setText("");
+
+		list.selectItem(0);
+		id.enterText(" ");
+		title.enterText("newAlbum");
+		button.requireDisabled();
+
+		id.setText("");
+		title.setText("");
+		list.clearSelection();
+
+		list.selectItem(0);
+		id.enterText("A");
+		title.enterText(" ");
+		button.requireDisabled();
+	}
+
+	@Test
+	public void testAddAlbumButtonShouldDelegateToDiscographyControllerNewAlbum() {
+		Musician musician = new Musician("1", "aMusician");
+		GuiActionRunner.execute(() -> view.getMusicianListModel().addElement(musician));
+		window.list("musicians").selectItem(0);
+		window.textBox("idAlbum").enterText("A");
+		window.textBox("titleAlbum").enterText("newAlbum");
+		window.button(JButtonMatcher.withText("Add Album")).click();
+		verify(controller).newAlbum(musician, new Album("A", "newAlbum", "1"));
 	}
 
 }
