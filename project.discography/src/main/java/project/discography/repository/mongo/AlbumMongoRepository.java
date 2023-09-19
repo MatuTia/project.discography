@@ -9,6 +9,7 @@ import org.bson.Document;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 
 import project.discography.model.Album;
 import project.discography.repository.AlbumRepository;
@@ -46,19 +47,18 @@ public class AlbumMongoRepository implements AlbumRepository {
 
 	@Override
 	public void saveAlbum(Album toSave) {
-		collection.insertOne(new Document().append(ID, toSave.getId()).append(TITLE, toSave.getTitle())
-				.append(MUSICIAN, toSave.getMusician()));
+		collection.insertOne(new Document().append(ID, toSave.getId()).append(TITLE, toSave.getTitle()).append(MUSICIAN,
+				toSave.getMusician()));
 	}
 
 	@Override
 	public void deleteAlbum(String id) {
-		 collection.deleteOne(Filters.eq(ID, id));
+		collection.deleteOne(Filters.eq(ID, id));
 	}
 
 	@Override
 	public void updateAlbum(String id, Album updated) {
-		// TODO Auto-generated method stub
-
+		collection.updateOne(Filters.eq(ID, id), Updates.set(TITLE, updated.getTitle()));
 	}
 
 	private Album fromDocumentToAlbum(Document document) {

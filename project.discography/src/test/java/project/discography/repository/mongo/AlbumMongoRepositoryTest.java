@@ -106,6 +106,14 @@ public class AlbumMongoRepositoryTest {
 		assertThat(readAllAlbumsFromDatabase()).isEmpty();
 	}
 
+	@Test
+	public void testUpdate() {
+		addTestAlbumToDatabase("A", "toUpdate", "1");
+		Album updated = new Album("A", "updated", "1");
+		repository.updateAlbum("A", updated);
+		assertThat(readAllAlbumsFromDatabase()).containsExactly(updated);
+	}
+
 	private void addTestAlbumToDatabase(String id, String title, String musician) {
 		collection.insertOne(new Document().append("id", id).append("title", title).append("musician", musician));
 	}
