@@ -189,6 +189,8 @@
 								project.discography.controller.DiscographyControllerTest</targetTest>
 							<targetTest>
 								project.discography.repository.mongo.MusicianMongoRepositoryTest</targetTest>
+							<targetTest>
+								project.discography.repository.mongo.AlbumMongoRepositoryTest</targetTest>
 						</targetTests>
 						<mutators>
 							<mutator>STRONGER</mutator>
