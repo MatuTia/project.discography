@@ -1,7 +1,6 @@
 package project.discography.view.swing;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -50,19 +49,6 @@ public class DiscographySwingView extends JFrame {
 
 	public void setController(DiscographyController controller) {
 		this.controller = controller;
-	}
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					DiscographySwingView frame = new DiscographySwingView();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 
 	public DiscographySwingView() {
