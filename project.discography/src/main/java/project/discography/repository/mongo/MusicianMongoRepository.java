@@ -40,8 +40,7 @@ public class MusicianMongoRepository implements MusicianRepository {
 
 	@Override
 	public void saveMusician(Musician toSave) {
-		// TODO Auto-generated method stub
-
+		 collection.insertOne(new Document().append(ID, toSave.getId()).append(NAME, toSave.getName()));
 	}
 
 	@Override

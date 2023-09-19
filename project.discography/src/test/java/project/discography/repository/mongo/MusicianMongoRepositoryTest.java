@@ -3,6 +3,9 @@ package project.discography.repository.mongo;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.InetSocketAddress;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.bson.Document;
 import org.junit.After;
@@ -79,8 +82,20 @@ public class MusicianMongoRepositoryTest {
 		assertThat(repository.findMusicianById("1")).isEqualTo(new Musician("1", "aMusician"));
 	}
 
+	@Test
+	public void testSaveMusician() {
+		Musician musician = new Musician("1", "newMusician");
+		repository.saveMusician(musician);
+		assertThat(readAllMusiciansFromDatabase()).containsExactly(musician);
+	}
+
 	private void addTestMusicianToDatabase(String id, String name) {
 		collection.insertOne(new Document().append("id", id).append("name", name));
+	}
+
+	private List<Musician> readAllMusiciansFromDatabase() {
+		return StreamSupport.stream(collection.find().spliterator(), false)
+				.map(d -> new Musician(d.getString("id"), d.getString("name"))).collect(Collectors.toList());
 	}
 
 }
