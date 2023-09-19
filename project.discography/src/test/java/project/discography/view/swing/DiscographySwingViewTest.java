@@ -9,6 +9,7 @@ import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.fixture.JButtonFixture;
+import org.assertj.swing.fixture.JListFixture;
 import org.assertj.swing.fixture.JTextComponentFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
@@ -108,4 +109,28 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Add Musician")).click();
 		verify(controller).newMusician(new Musician("1", "newMusician"));
 	}
+
+	@Test
+	@GUITest
+	public void testDeleteMusicianButtonShouldBeEnabledOnlyWhenAMusicianIsSelected() {
+		JListFixture list = window.list("musicians");
+		JButtonFixture button = window.button(JButtonMatcher.withText("Delete Musician"));
+		GuiActionRunner.execute(() -> view.getMusicianListModel().addElement(new Musician("1", "toDelete")));
+
+		list.selectItem(0);
+		button.requireEnabled();
+
+		list.clearSelection();
+		button.requireDisabled();
+	}
+
+	@Test
+	public void testDeleteMusicianButtonShouldDelegateToDiscographyControllerDeleteMusician() {
+		Musician toDelete = new Musician("1", "toDelete");
+		GuiActionRunner.execute(() -> view.getMusicianListModel().addElement(toDelete));
+		window.list("musicians").selectItem(0);
+		window.button(JButtonMatcher.withText("Delete Musician")).click();
+		verify(controller).deleteMusician(toDelete);
+	}
+
 }

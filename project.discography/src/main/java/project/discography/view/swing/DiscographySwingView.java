@@ -37,6 +37,7 @@ public class DiscographySwingView extends JFrame {
 	private JList<Musician> listMusicians;
 	private JList<Album> listAlbums;
 	private JButton btnAddMusician;
+	private JButton btnDeleteMusician;
 
 	private DefaultListModel<Musician> musicianListModel;
 
@@ -142,6 +143,8 @@ public class DiscographySwingView extends JFrame {
 		scrollPaneMusician.setViewportView(listMusicians);
 		listMusicians.setName("musicians");
 
+		listMusicians.addListSelectionListener(e -> btnDeleteMusicianEnabler());
+
 		btnAddMusician = new JButton("Add Musician");
 		btnAddMusician.setEnabled(false);
 		GridBagConstraints gbc_btnAddMusician = new GridBagConstraints();
@@ -153,13 +156,15 @@ public class DiscographySwingView extends JFrame {
 		btnAddMusician.addActionListener(e -> controller
 				.newMusician(new Musician(textFieldIdMusician.getText(), textFieldNameMusician.getText())));
 
-		JButton btnDeleteMusician = new JButton("Delete Musician");
+		btnDeleteMusician = new JButton("Delete Musician");
 		btnDeleteMusician.setEnabled(false);
 		GridBagConstraints gbc_btnDeleteMusician = new GridBagConstraints();
 		gbc_btnDeleteMusician.insets = new Insets(0, 0, 5, 5);
 		gbc_btnDeleteMusician.gridx = 1;
 		gbc_btnDeleteMusician.gridy = 3;
 		contentPane.add(btnDeleteMusician, gbc_btnDeleteMusician);
+
+		btnDeleteMusician.addActionListener(e -> controller.deleteMusician(listMusicians.getSelectedValue()));
 
 		JButton btnUpdateMusician = new JButton("Update Musician");
 		btnUpdateMusician.setEnabled(false);
@@ -262,6 +267,10 @@ public class DiscographySwingView extends JFrame {
 	private void btnAddMusicianEnabler() {
 		btnAddMusician.setEnabled(
 				!textFieldIdMusician.getText().trim().isEmpty() && !textFieldNameMusician.getText().trim().isEmpty());
+	}
+
+	private void btnDeleteMusicianEnabler() {
+		btnDeleteMusician.setEnabled(listMusicians.getSelectedIndex() != -1);
 	}
 
 }
