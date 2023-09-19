@@ -28,5 +28,5 @@ jobs:
         restore-keys: ${{ runner.os }}-m2-
 
     - name: Build with Maven and mutation testing
-      run: mvn test org.pitest:pitest-maven:mutationCoverage
+      run: xvfb-run mvn test org.pitest:pitest-maven:mutationCoverage
       working-directory: project.discography
