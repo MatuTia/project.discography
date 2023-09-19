@@ -46,8 +46,8 @@ public class AlbumMongoRepository implements AlbumRepository {
 
 	@Override
 	public void saveAlbum(Album toSave) {
-		// TODO Auto-generated method stub
-
+		collection.insertOne(new Document().append(ID, toSave.getId()).append(TITLE, toSave.getTitle())
+				.append(MUSICIAN, toSave.getMusician()));
 	}
 
 	@Override

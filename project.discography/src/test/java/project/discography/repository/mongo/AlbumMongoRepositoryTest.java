@@ -92,6 +92,13 @@ public class AlbumMongoRepositoryTest {
 		assertThat(repository.findAlbumById("A")).isEqualTo(new Album("A", "anAlbum", "1"));
 	}
 
+	@Test
+	public void testSaveAlbum() {
+		Album album = new Album("A", "newAlbum", "1");
+		repository.saveAlbum(album);
+		assertThat(readAllAlbumsFromDatabase()).containsExactly(album);
+	}
+
 	private void addTestAlbumToDatabase(String id, String title, String musician) {
 		collection.insertOne(new Document().append("id", id).append("title", title).append("musician", musician));
 	}
