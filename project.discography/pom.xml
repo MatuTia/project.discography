@@ -16,6 +16,7 @@
 		<cucumber>7.14.0</cucumber>
 		<mongo.driver>3.12.9</mongo.driver>
 		<mongo.server>1.43.0</mongo.server>
+		<testcontainer>1.19.0</testcontainer>
 		<assertj-swing>3.17.1</assertj-swing>
 		<site.plugin>3.9.1</site.plugin>
 		<jacoco.plugin>0.8.9</jacoco.plugin>
@@ -85,6 +86,18 @@
 			<groupId>de.bwaldvogel</groupId>
 			<artifactId>mongo-java-server</artifactId>
 			<version>${mongo.server}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>testcontainers</artifactId>
+			<version>${testcontainer}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>mongodb</artifactId>
+			<version>${testcontainer}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
