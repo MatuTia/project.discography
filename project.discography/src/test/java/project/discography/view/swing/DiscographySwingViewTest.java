@@ -234,4 +234,35 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		verify(controller).newAlbum(musician, new Album("A", "newAlbum", "1"));
 	}
 
+	@Test
+	@GUITest
+	public void testDeleteAlbumButtonShouldBeEnabledOnlyWhenMusicianAndAlbumIsSelected() {
+		JListFixture musicians = window.list("musicians");
+		JListFixture albums = window.list("albums");
+		JButtonFixture button = window.button(JButtonMatcher.withText("Delete Album"));
+		GuiActionRunner.execute(() -> view.getMusicianListModel().addElement(new Musician("1", "aMusician")));
+		GuiActionRunner.execute(() -> view.getAlbumListModel().addElement(new Album("A", "toDelete", "1")));
+
+		musicians.selectItem(0);
+		button.requireDisabled();
+
+		albums.selectItem(0);
+		button.requireEnabled();
+
+		musicians.clearSelection();
+		button.requireDisabled();
+	}
+
+	@Test
+	public void testDeleteButtonShouldDelegateToDiscographyControllerDeleteAlbum() {
+		Musician musician = new Musician("1", "aMusician");
+		Album album = new Album("A", "toDelete", "1");
+		GuiActionRunner.execute(() -> view.getMusicianListModel().addElement(musician));
+		GuiActionRunner.execute(() -> view.getAlbumListModel().addElement(album));
+		window.list("musicians").selectItem(0);
+		window.list("albums").selectItem(0);
+		window.button(JButtonMatcher.withText("Delete Album")).click();
+		verify(controller).deleteAlbum(musician, album);
+	}
+
 }

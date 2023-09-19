@@ -45,6 +45,8 @@ public class DiscographySwingView extends JFrame {
 
 	private DefaultListModel<Album> albumListModel;
 
+	private JButton btnDeleteAlbum;
+
 	DefaultListModel<Musician> getMusicianListModel() {
 		return musicianListModel;
 	}
@@ -153,6 +155,7 @@ public class DiscographySwingView extends JFrame {
 			btnDeleteMusicianEnabler();
 			btnUpdateMusicianEnabler();
 			btnAddAlbumEnabler();
+			btnDeleteAlbumEnabler();
 		});
 
 		btnAddMusician = new JButton("Add Musician");
@@ -260,9 +263,10 @@ public class DiscographySwingView extends JFrame {
 
 		listAlbums = new JList<>(getAlbumListModel());
 		listAlbums.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listAlbums.setEnabled(false);
 		scrollPaneAlbum.setViewportView(listAlbums);
 		listAlbums.setName("albums");
+
+		listAlbums.addListSelectionListener(e -> btnDeleteAlbumEnabler());
 
 		btnAddAlbum = new JButton("Add Album");
 		btnAddAlbum.setEnabled(false);
@@ -278,13 +282,16 @@ public class DiscographySwingView extends JFrame {
 					new Album(textFieldIdAlbum.getText(), textFieldTitleAlbum.getText(), musician.getId()));
 		});
 
-		JButton btnDeleteAlbum = new JButton("Delete Album");
+		btnDeleteAlbum = new JButton("Delete Album");
 		btnDeleteAlbum.setEnabled(false);
 		GridBagConstraints gbc_btnDeleteAlbum = new GridBagConstraints();
 		gbc_btnDeleteAlbum.insets = new Insets(0, 0, 5, 5);
 		gbc_btnDeleteAlbum.gridx = 1;
 		gbc_btnDeleteAlbum.gridy = 7;
 		contentPane.add(btnDeleteAlbum, gbc_btnDeleteAlbum);
+
+		btnDeleteAlbum.addActionListener(
+				e -> controller.deleteAlbum(listMusicians.getSelectedValue(), listAlbums.getSelectedValue()));
 
 		JButton btnUpdateAlbum = new JButton("Update Album");
 		btnUpdateAlbum.setEnabled(false);
@@ -322,6 +329,10 @@ public class DiscographySwingView extends JFrame {
 	private void btnAddAlbumEnabler() {
 		btnAddAlbum.setEnabled(listMusicians.getSelectedIndex() != -1 && !textFieldIdAlbum.getText().trim().isEmpty()
 				&& !textFieldTitleAlbum.getText().trim().isEmpty());
+	}
+
+	private void btnDeleteAlbumEnabler() {
+		btnDeleteAlbum.setEnabled(listMusicians.getSelectedIndex() != -1 && listAlbums.getSelectedIndex() != -1);
 	}
 
 }
