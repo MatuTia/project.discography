@@ -76,4 +76,11 @@ public class DiscographyControllerIT {
 		verify(view).showAllMusicians(Arrays.asList(musician));
 	}
 
+	@Test
+	public void testNewMusician() {
+		Musician newMusician = new Musician("1", "newMusician");
+		controller.newMusician(newMusician);
+		verify(view).musicianAdded(newMusician);
+	}
+
 }
