@@ -89,6 +89,13 @@ public class MusicianMongoRepositoryTest {
 		assertThat(readAllMusiciansFromDatabase()).containsExactly(musician);
 	}
 
+	@Test
+	public void testDeleteMusician() {
+		addTestMusicianToDatabase("1", "toDelete");
+		repository.deleteMusician("1");
+		assertThat(readAllMusiciansFromDatabase()).isEmpty();
+	}
+
 	private void addTestMusicianToDatabase(String id, String name) {
 		collection.insertOne(new Document().append("id", id).append("name", name));
 	}

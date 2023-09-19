@@ -45,8 +45,7 @@ public class MusicianMongoRepository implements MusicianRepository {
 
 	@Override
 	public void deleteMusician(String id) {
-		// TODO Auto-generated method stub
-
+		  collection.deleteOne(Filters.eq(ID, id));
 	}
 
 	@Override
