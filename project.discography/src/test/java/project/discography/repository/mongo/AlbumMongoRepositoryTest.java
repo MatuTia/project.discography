@@ -81,6 +81,17 @@ public class AlbumMongoRepositoryTest {
 		assertThat(repository.findAllAlbumsOfMusician("2")).containsExactly(new Album("B", "toFind", "2"));
 	}
 
+	@Test
+	public void testFindAlbumByIdNotFound() {
+		assertThat(repository.findAlbumById("A")).isNull();
+	}
+
+	@Test
+	public void testFindAlbumByIdFound() {
+		addTestAlbumToDatabase("A", "anAlbum", "1");
+		assertThat(repository.findAlbumById("A")).isEqualTo(new Album("A", "anAlbum", "1"));
+	}
+
 	private void addTestAlbumToDatabase(String id, String title, String musician) {
 		collection.insertOne(new Document().append("id", id).append("title", title).append("musician", musician));
 	}

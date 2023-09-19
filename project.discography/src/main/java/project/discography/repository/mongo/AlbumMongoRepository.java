@@ -38,8 +38,10 @@ public class AlbumMongoRepository implements AlbumRepository {
 
 	@Override
 	public Album findAlbumById(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		Document document = collection.find(Filters.eq(ID, id)).first();
+		if (document == null)
+			return null;
+		return fromDocumentToAlbum(document);
 	}
 
 	@Override
