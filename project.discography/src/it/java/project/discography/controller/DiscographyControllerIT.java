@@ -17,6 +17,7 @@ import org.testcontainers.containers.MongoDBContainer;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 
+import project.discography.model.Album;
 import project.discography.model.Musician;
 import project.discography.repository.AlbumRepository;
 import project.discography.repository.MusicianRepository;
@@ -98,6 +99,16 @@ public class DiscographyControllerIT {
 		musicianRepository.saveMusician(toUpdate);
 		controller.updateMusician(toUpdate, updated);
 		verify(view).musicianUpdated(toUpdate, updated);
+	}
+
+	@Test
+	public void testMusicianDiscography() {
+		Musician musician = new Musician("1", "aMusician");
+		musicianRepository.saveMusician(musician);
+		Album album = new Album("A", "anAlbum", "1");
+		albumRepository.saveAlbum(album);
+		controller.musicianDiscography(musician);
+		verify(view).showAllAlbums(Arrays.asList(album));
 	}
 
 }
