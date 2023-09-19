@@ -1,6 +1,8 @@
 package project.discography.repository.mongo;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.bson.Document;
 
@@ -13,6 +15,8 @@ import project.discography.repository.AlbumRepository;
 
 public class AlbumMongoRepository implements AlbumRepository {
 
+	private static final String ID = "id";
+	private static final String TITLE = "title";
 	private static final String MUSICIAN = "musician";
 
 	private MongoCollection<Document> collection;
@@ -28,8 +32,8 @@ public class AlbumMongoRepository implements AlbumRepository {
 
 	@Override
 	public List<Album> findAllAlbumsOfMusician(String musician) {
-		// TODO Auto-generated method stub
-		return null;
+		return StreamSupport.stream(collection.find(Filters.eq(MUSICIAN, musician)).spliterator(), false)
+				.map(this::fromDocumentToAlbum).collect(Collectors.toList());
 	}
 
 	@Override
@@ -54,6 +58,10 @@ public class AlbumMongoRepository implements AlbumRepository {
 	public void updateAlbum(String id, Album updated) {
 		// TODO Auto-generated method stub
 
+	}
+
+	private Album fromDocumentToAlbum(Document document) {
+		return new Album(document.getString(ID), document.getString(TITLE), document.getString(MUSICIAN));
 	}
 
 }
