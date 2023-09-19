@@ -68,6 +68,17 @@ public class MusicianMongoRepositoryTest {
 				new Musician("2", "otherMusician"));
 	}
 
+	@Test
+	public void testFindByIdNotFound() {
+		assertThat(repository.findMusicianById("id")).isNull();
+	}
+
+	@Test
+	public void testFindByIdFound() {
+		addTestMusicianToDatabase("1", "aMusician");
+		assertThat(repository.findMusicianById("1")).isEqualTo(new Musician("1", "aMusician"));
+	}
+
 	private void addTestMusicianToDatabase(String id, String name) {
 		collection.insertOne(new Document().append("id", id).append("name", name));
 	}

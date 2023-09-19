@@ -8,6 +8,7 @@ import org.bson.Document;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 
 import project.discography.model.Musician;
 import project.discography.repository.MusicianRepository;
@@ -31,8 +32,10 @@ public class MusicianMongoRepository implements MusicianRepository {
 
 	@Override
 	public Musician findMusicianById(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		Document document = collection.find(Filters.eq(ID, id)).first();
+		if (document == null)
+			return null;
+		return fromDocumentToMusician(document);
 	}
 
 	@Override
