@@ -111,4 +111,13 @@ public class DiscographyControllerIT {
 		verify(view).showAllAlbums(Arrays.asList(album));
 	}
 
+	@Test
+	public void testNewAlbum() {
+		Musician musician = new Musician("1", "aMusician");
+		musicianRepository.saveMusician(musician);
+		Album newAlbum = new Album("A", "newAlbum", "1");
+		controller.newAlbum(musician, newAlbum);
+		verify(view).albumAdded(newAlbum);
+	}
+
 }
