@@ -91,4 +91,13 @@ public class DiscographyControllerIT {
 		verify(view).musicianRemoved(toDelete);
 	}
 
+	@Test
+	public void testUpdateMusician() {
+		Musician toUpdate = new Musician("1", "toUpdate");
+		Musician updated = new Musician("1", "updated");
+		musicianRepository.saveMusician(toUpdate);
+		controller.updateMusician(toUpdate, updated);
+		verify(view).musicianUpdated(toUpdate, updated);
+	}
+
 }
