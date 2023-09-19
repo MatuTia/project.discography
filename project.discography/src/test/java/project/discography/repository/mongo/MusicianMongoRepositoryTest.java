@@ -27,9 +27,11 @@ public class MusicianMongoRepositoryTest {
 
 	private static final String COLLECTION_NAME = "test-musician-collection";
 	private static final String DATABASE_NAME = "test-discography";
+
 	private static MongoServer server;
 	private static InetSocketAddress address;
 	private MongoClient client;
+
 	private MongoCollection<Document> collection;
 	private MusicianMongoRepository repository;
 

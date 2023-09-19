@@ -181,10 +181,14 @@
 						<targetClasses>
 							<targetClasse>
 								project.discography.controller.*</targetClasse>
+							<targetClasse>
+								project.discography.repository.mongo.*</targetClasse>
 						</targetClasses>
 						<targetTests>
 							<targetTest>
 								project.discography.controller.DiscographyControllerTest</targetTest>
+							<targetTest>
+								project.discography.repository.mongo.MusicianMongoRepositoryTest</targetTest>
 						</targetTests>
 						<mutators>
 							<mutator>STRONGER</mutator>
