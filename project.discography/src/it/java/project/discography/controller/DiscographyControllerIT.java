@@ -120,4 +120,14 @@ public class DiscographyControllerIT {
 		verify(view).albumAdded(newAlbum);
 	}
 
+	@Test
+	public void testDeleteAlbum() {
+		Musician musician = new Musician("1", "aMusician");
+		musicianRepository.saveMusician(musician);
+		Album toDelete = new Album("A", "toDelete", "1");
+		albumRepository.saveAlbum(toDelete);
+		controller.deleteAlbum(musician, toDelete);
+		verify(view).albumRemoved(toDelete);
+	}
+
 }
