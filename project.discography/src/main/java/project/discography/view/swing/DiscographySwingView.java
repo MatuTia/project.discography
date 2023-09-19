@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -34,6 +36,12 @@ public class DiscographySwingView extends JFrame {
 	private JTextField textFieldTitleAlbum;
 	private JList<Musician> listMusicians;
 	private JList<Album> listAlbums;
+	private JButton btnAddMusician;
+	private JButton btnDeleteMusician;
+	private JButton btnUpdateMusician;
+	private JButton btnAddAlbum;
+	private JButton btnDeleteAlbum;
+	private JButton btnUpdateAlbum;
 
 	private DefaultListModel<Musician> musicianListModel;
 
@@ -84,6 +92,16 @@ public class DiscographySwingView extends JFrame {
 		contentPane.add(textFieldIdMusician, gbc_textFieldIdMusician);
 		textFieldIdMusician.setColumns(10);
 
+		textFieldIdMusician.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				btnAddMusicianEnabler();
+				super.keyReleased(e);
+			}
+
+		});
+
 		JLabel lblNameMusician = new JLabel("name Musician");
 		GridBagConstraints gbc_lblNameMusician = new GridBagConstraints();
 		gbc_lblNameMusician.anchor = GridBagConstraints.EAST;
@@ -103,6 +121,17 @@ public class DiscographySwingView extends JFrame {
 		contentPane.add(textFieldNameMusician, gbc_textFieldNameMusician);
 		textFieldNameMusician.setColumns(10);
 
+		textFieldNameMusician.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				btnAddMusicianEnabler();
+				btnUpdateMusicianEnabler();
+				super.keyReleased(e);
+			}
+
+		});
+
 		JScrollPane scrollPaneMusician = new JScrollPane();
 		GridBagConstraints gbc_scrollPaneMusician = new GridBagConstraints();
 		gbc_scrollPaneMusician.insets = new Insets(0, 0, 5, 0);
@@ -119,7 +148,18 @@ public class DiscographySwingView extends JFrame {
 		scrollPaneMusician.setViewportView(listMusicians);
 		listMusicians.setName("musicians");
 
-		JButton btnAddMusician = new JButton("Add Musician");
+		listMusicians.addListSelectionListener(e -> {
+			if (!e.getValueIsAdjusting() && listMusicians.getSelectedIndex() != -1) {
+				controller.musicianDiscography(listMusicians.getSelectedValue());
+			}
+			btnDeleteMusicianEnabler();
+			btnUpdateMusicianEnabler();
+			btnAddAlbumEnabler();
+			btnDeleteAlbumEnabler();
+			btnUpdateAlbumEnabler();
+		});
+
+		btnAddMusician = new JButton("Add Musician");
 		btnAddMusician.setEnabled(false);
 		GridBagConstraints gbc_btnAddMusician = new GridBagConstraints();
 		gbc_btnAddMusician.insets = new Insets(0, 0, 5, 5);
@@ -127,7 +167,10 @@ public class DiscographySwingView extends JFrame {
 		gbc_btnAddMusician.gridy = 3;
 		contentPane.add(btnAddMusician, gbc_btnAddMusician);
 
-		JButton btnDeleteMusician = new JButton("Delete Musician");
+		btnAddMusician.addActionListener(e -> controller
+				.newMusician(new Musician(textFieldIdMusician.getText(), textFieldNameMusician.getText())));
+
+		btnDeleteMusician = new JButton("Delete Musician");
 		btnDeleteMusician.setEnabled(false);
 		GridBagConstraints gbc_btnDeleteMusician = new GridBagConstraints();
 		gbc_btnDeleteMusician.insets = new Insets(0, 0, 5, 5);
@@ -135,13 +178,20 @@ public class DiscographySwingView extends JFrame {
 		gbc_btnDeleteMusician.gridy = 3;
 		contentPane.add(btnDeleteMusician, gbc_btnDeleteMusician);
 
-		JButton btnUpdateMusician = new JButton("Update Musician");
+		btnDeleteMusician.addActionListener(e -> controller.deleteMusician(listMusicians.getSelectedValue()));
+
+		btnUpdateMusician = new JButton("Update Musician");
 		btnUpdateMusician.setEnabled(false);
 		GridBagConstraints gbc_btnUpdateMusician = new GridBagConstraints();
 		gbc_btnUpdateMusician.insets = new Insets(0, 0, 5, 0);
 		gbc_btnUpdateMusician.gridx = 2;
 		gbc_btnUpdateMusician.gridy = 3;
 		contentPane.add(btnUpdateMusician, gbc_btnUpdateMusician);
+
+		btnUpdateMusician.addActionListener(e -> {
+			Musician toUpdate = listMusicians.getSelectedValue();
+			controller.updateMusician(toUpdate, new Musician(toUpdate.getId(), textFieldNameMusician.getText()));
+		});
 
 		JLabel lblIdAlbum = new JLabel("id Album");
 		GridBagConstraints gbc_lblIdAlbum = new GridBagConstraints();
@@ -162,6 +212,16 @@ public class DiscographySwingView extends JFrame {
 		contentPane.add(textFieldIdAlbum, gbc_textFieldIdAlbum);
 		textFieldIdAlbum.setColumns(10);
 
+		textFieldIdAlbum.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				btnAddAlbumEnabler();
+				super.keyReleased(e);
+			}
+
+		});
+
 		JLabel lblTitleAlbum = new JLabel("title Album");
 		GridBagConstraints gbc_lblTitleAlbum = new GridBagConstraints();
 		gbc_lblTitleAlbum.insets = new Insets(0, 0, 5, 5);
@@ -181,6 +241,17 @@ public class DiscographySwingView extends JFrame {
 		contentPane.add(textFieldTitleAlbum, gbc_textFieldTitleAlbum);
 		textFieldTitleAlbum.setColumns(10);
 
+		textFieldTitleAlbum.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				btnAddAlbumEnabler();
+				btnUpdateAlbumEnabler();
+				super.keyReleased(e);
+			}
+
+		});
+
 		JScrollPane scrollPaneAlbum = new JScrollPane();
 		GridBagConstraints gbc_scrollPaneAlbum = new GridBagConstraints();
 		gbc_scrollPaneAlbum.insets = new Insets(0, 0, 5, 0);
@@ -194,11 +265,15 @@ public class DiscographySwingView extends JFrame {
 
 		listAlbums = new JList<>(getAlbumListModel());
 		listAlbums.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listAlbums.setEnabled(false);
 		scrollPaneAlbum.setViewportView(listAlbums);
 		listAlbums.setName("albums");
 
-		JButton btnAddAlbum = new JButton("Add Album");
+		listAlbums.addListSelectionListener(e -> {
+			btnDeleteAlbumEnabler();
+			btnUpdateAlbumEnabler();
+		});
+
+		btnAddAlbum = new JButton("Add Album");
 		btnAddAlbum.setEnabled(false);
 		GridBagConstraints gbc_btnAddAlbum = new GridBagConstraints();
 		gbc_btnAddAlbum.insets = new Insets(0, 0, 5, 5);
@@ -206,7 +281,13 @@ public class DiscographySwingView extends JFrame {
 		gbc_btnAddAlbum.gridy = 7;
 		contentPane.add(btnAddAlbum, gbc_btnAddAlbum);
 
-		JButton btnDeleteAlbum = new JButton("Delete Album");
+		btnAddAlbum.addActionListener(e -> {
+			Musician musician = listMusicians.getSelectedValue();
+			controller.newAlbum(musician,
+					new Album(textFieldIdAlbum.getText(), textFieldTitleAlbum.getText(), musician.getId()));
+		});
+
+		btnDeleteAlbum = new JButton("Delete Album");
 		btnDeleteAlbum.setEnabled(false);
 		GridBagConstraints gbc_btnDeleteAlbum = new GridBagConstraints();
 		gbc_btnDeleteAlbum.insets = new Insets(0, 0, 5, 5);
@@ -214,13 +295,22 @@ public class DiscographySwingView extends JFrame {
 		gbc_btnDeleteAlbum.gridy = 7;
 		contentPane.add(btnDeleteAlbum, gbc_btnDeleteAlbum);
 
-		JButton btnUpdateAlbum = new JButton("Update Album");
+		btnDeleteAlbum.addActionListener(
+				e -> controller.deleteAlbum(listMusicians.getSelectedValue(), listAlbums.getSelectedValue()));
+
+		btnUpdateAlbum = new JButton("Update Album");
 		btnUpdateAlbum.setEnabled(false);
 		GridBagConstraints gbc_btnUpdateAlbum = new GridBagConstraints();
 		gbc_btnUpdateAlbum.insets = new Insets(0, 0, 5, 0);
 		gbc_btnUpdateAlbum.gridx = 2;
 		gbc_btnUpdateAlbum.gridy = 7;
 		contentPane.add(btnUpdateAlbum, gbc_btnUpdateAlbum);
+
+		btnUpdateAlbum.addActionListener(e -> {
+			Album album = listAlbums.getSelectedValue();
+			controller.updateAlbum(listMusicians.getSelectedValue(), album,
+					new Album(album.getId(), textFieldTitleAlbum.getText(), album.getMusician()));
+		});
 
 		JLabel labelError = new JLabel(" ");
 		labelError.setForeground(Color.RED);
@@ -231,6 +321,34 @@ public class DiscographySwingView extends JFrame {
 		gbc_labelError.gridx = 0;
 		gbc_labelError.gridy = 8;
 		contentPane.add(labelError, gbc_labelError);
+	}
+
+	private void btnAddMusicianEnabler() {
+		btnAddMusician.setEnabled(
+				!textFieldIdMusician.getText().trim().isEmpty() && !textFieldNameMusician.getText().trim().isEmpty());
+	}
+
+	private void btnDeleteMusicianEnabler() {
+		btnDeleteMusician.setEnabled(listMusicians.getSelectedIndex() != -1);
+	}
+
+	private void btnUpdateMusicianEnabler() {
+		btnUpdateMusician.setEnabled(
+				listMusicians.getSelectedIndex() != -1 && !textFieldNameMusician.getText().trim().isEmpty());
+	}
+
+	private void btnAddAlbumEnabler() {
+		btnAddAlbum.setEnabled(listMusicians.getSelectedIndex() != -1 && !textFieldIdAlbum.getText().trim().isEmpty()
+				&& !textFieldTitleAlbum.getText().trim().isEmpty());
+	}
+
+	private void btnDeleteAlbumEnabler() {
+		btnDeleteAlbum.setEnabled(listMusicians.getSelectedIndex() != -1 && listAlbums.getSelectedIndex() != -1);
+	}
+
+	private void btnUpdateAlbumEnabler() {
+		btnUpdateAlbum.setEnabled(listMusicians.getSelectedIndex() != -1 && listAlbums.getSelectedIndex() != -1
+				&& !textFieldTitleAlbum.getText().trim().isEmpty());
 	}
 
 }
