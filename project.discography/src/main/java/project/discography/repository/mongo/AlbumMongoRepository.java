@@ -52,8 +52,7 @@ public class AlbumMongoRepository implements AlbumRepository {
 
 	@Override
 	public void deleteAlbum(String id) {
-		// TODO Auto-generated method stub
-
+		 collection.deleteOne(Filters.eq(ID, id));
 	}
 
 	@Override

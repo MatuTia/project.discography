@@ -99,6 +99,13 @@ public class AlbumMongoRepositoryTest {
 		assertThat(readAllAlbumsFromDatabase()).containsExactly(album);
 	}
 
+	@Test
+	public void testDeleteAlbum() {
+		addTestAlbumToDatabase("A", "toDelete", "1");
+		repository.deleteAlbum("A");
+		assertThat(readAllAlbumsFromDatabase()).isEmpty();
+	}
+
 	private void addTestAlbumToDatabase(String id, String title, String musician) {
 		collection.insertOne(new Document().append("id", id).append("title", title).append("musician", musician));
 	}
