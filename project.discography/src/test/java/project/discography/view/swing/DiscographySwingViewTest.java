@@ -2,6 +2,7 @@ package project.discography.view.swing;
 
 import static org.mockito.Mockito.mockitoSession;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
@@ -168,6 +169,16 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		window.textBox("nameMusician").enterText("updated");
 		window.button(JButtonMatcher.withText("Update Musician")).click();
 		verify(controller).updateMusician(toUpdate, new Musician("1", "updated"));
+	}
+
+	@Test
+	public void testListMusicianShouldDelegateToDiscographyFindAllAlbumsOfMusician() {
+		Musician musician = new Musician("1", "aMusician");
+		GuiActionRunner.execute(() -> view.getMusicianListModel().addElement(musician));
+		window.list("musicians").selectItem(0);
+		verify(controller).musicianDiscography(musician);
+		window.list("musicians").clearSelection();
+		verifyNoMoreInteractions(controller);
 	}
 
 }

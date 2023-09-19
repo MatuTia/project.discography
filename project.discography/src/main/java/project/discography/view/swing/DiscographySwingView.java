@@ -146,6 +146,9 @@ public class DiscographySwingView extends JFrame {
 		listMusicians.setName("musicians");
 
 		listMusicians.addListSelectionListener(e -> {
+			if (!e.getValueIsAdjusting() && listMusicians.getSelectedIndex() != -1) {
+				controller.musicianDiscography(listMusicians.getSelectedValue());
+			}
 			btnDeleteMusicianEnabler();
 			btnUpdateMusicianEnabler();
 		});
