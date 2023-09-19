@@ -1,12 +1,15 @@
 package project.discography.view.swing;
 
 import static org.mockito.Mockito.mockitoSession;
+import static org.mockito.Mockito.verify;
 
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
+import org.assertj.swing.fixture.JButtonFixture;
+import org.assertj.swing.fixture.JTextComponentFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
@@ -16,6 +19,7 @@ import org.mockito.MockitoSession;
 import org.mockito.quality.Strictness;
 
 import project.discography.controller.DiscographyController;
+import project.discography.model.Musician;
 
 @RunWith(GUITestRunner.class)
 public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
@@ -70,4 +74,38 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Update Album")).requireDisabled();
 	}
 
+	@Test
+	@GUITest
+	public void testAddMusicianButtonShouldBeEnableWhenMusicianFieldsAreNotEmpty() {
+		window.textBox("idMusician").enterText("1");
+		window.textBox("nameMusician").enterText("newMusician");
+		window.button(JButtonMatcher.withText("Add Musician")).requireEnabled();
+	}
+
+	@Test
+	@GUITest
+	public void testAddMusicianButtonShouldBeDisableWhenAtLeastOneMusicianFieldIsBlanck() {
+		JTextComponentFixture id = window.textBox("idMusician");
+		JTextComponentFixture name = window.textBox("nameMusician");
+		JButtonFixture button = window.button(JButtonMatcher.withText("Add Musician"));
+
+		id.enterText("1");
+		name.enterText(" ");
+		button.requireDisabled();
+
+		id.setText("");
+		name.setText("");
+
+		id.enterText(" ");
+		name.enterText("newMusician");
+		button.requireDisabled();
+	}
+
+	@Test
+	public void testAddMusicianButtonShouldDelegateToDiscographyControllerNewMusician() {
+		window.textBox("idMusician").enterText("1");
+		window.textBox("nameMusician").enterText("newMusician");
+		window.button(JButtonMatcher.withText("Add Musician")).click();
+		verify(controller).newMusician(new Musician("1", "newMusician"));
+	}
 }

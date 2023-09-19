@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -34,6 +36,7 @@ public class DiscographySwingView extends JFrame {
 	private JTextField textFieldTitleAlbum;
 	private JList<Musician> listMusicians;
 	private JList<Album> listAlbums;
+	private JButton btnAddMusician;
 
 	private DefaultListModel<Musician> musicianListModel;
 
@@ -84,6 +87,16 @@ public class DiscographySwingView extends JFrame {
 		contentPane.add(textFieldIdMusician, gbc_textFieldIdMusician);
 		textFieldIdMusician.setColumns(10);
 
+		textFieldIdMusician.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				btnAddMusicianEnabler();
+				super.keyReleased(e);
+			}
+
+		});
+
 		JLabel lblNameMusician = new JLabel("name Musician");
 		GridBagConstraints gbc_lblNameMusician = new GridBagConstraints();
 		gbc_lblNameMusician.anchor = GridBagConstraints.EAST;
@@ -103,6 +116,16 @@ public class DiscographySwingView extends JFrame {
 		contentPane.add(textFieldNameMusician, gbc_textFieldNameMusician);
 		textFieldNameMusician.setColumns(10);
 
+		textFieldNameMusician.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				btnAddMusicianEnabler();
+				super.keyReleased(e);
+			}
+
+		});
+
 		JScrollPane scrollPaneMusician = new JScrollPane();
 		GridBagConstraints gbc_scrollPaneMusician = new GridBagConstraints();
 		gbc_scrollPaneMusician.insets = new Insets(0, 0, 5, 0);
@@ -119,13 +142,16 @@ public class DiscographySwingView extends JFrame {
 		scrollPaneMusician.setViewportView(listMusicians);
 		listMusicians.setName("musicians");
 
-		JButton btnAddMusician = new JButton("Add Musician");
+		btnAddMusician = new JButton("Add Musician");
 		btnAddMusician.setEnabled(false);
 		GridBagConstraints gbc_btnAddMusician = new GridBagConstraints();
 		gbc_btnAddMusician.insets = new Insets(0, 0, 5, 5);
 		gbc_btnAddMusician.gridx = 0;
 		gbc_btnAddMusician.gridy = 3;
 		contentPane.add(btnAddMusician, gbc_btnAddMusician);
+
+		btnAddMusician.addActionListener(e -> controller
+				.newMusician(new Musician(textFieldIdMusician.getText(), textFieldNameMusician.getText())));
 
 		JButton btnDeleteMusician = new JButton("Delete Musician");
 		btnDeleteMusician.setEnabled(false);
@@ -231,6 +257,11 @@ public class DiscographySwingView extends JFrame {
 		gbc_labelError.gridx = 0;
 		gbc_labelError.gridy = 8;
 		contentPane.add(labelError, gbc_labelError);
+	}
+
+	private void btnAddMusicianEnabler() {
+		btnAddMusician.setEnabled(
+				!textFieldIdMusician.getText().trim().isEmpty() && !textFieldNameMusician.getText().trim().isEmpty());
 	}
 
 }
