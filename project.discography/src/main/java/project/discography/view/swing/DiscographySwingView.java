@@ -38,6 +38,7 @@ public class DiscographySwingView extends JFrame {
 	private JList<Album> listAlbums;
 	private JButton btnAddMusician;
 	private JButton btnDeleteMusician;
+	private JButton btnUpdateMusician;
 
 	private DefaultListModel<Musician> musicianListModel;
 
@@ -122,6 +123,7 @@ public class DiscographySwingView extends JFrame {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				btnAddMusicianEnabler();
+				btnUpdateMusicianEnabler();
 				super.keyReleased(e);
 			}
 
@@ -143,7 +145,10 @@ public class DiscographySwingView extends JFrame {
 		scrollPaneMusician.setViewportView(listMusicians);
 		listMusicians.setName("musicians");
 
-		listMusicians.addListSelectionListener(e -> btnDeleteMusicianEnabler());
+		listMusicians.addListSelectionListener(e -> {
+			btnDeleteMusicianEnabler();
+			btnUpdateMusicianEnabler();
+		});
 
 		btnAddMusician = new JButton("Add Musician");
 		btnAddMusician.setEnabled(false);
@@ -166,13 +171,18 @@ public class DiscographySwingView extends JFrame {
 
 		btnDeleteMusician.addActionListener(e -> controller.deleteMusician(listMusicians.getSelectedValue()));
 
-		JButton btnUpdateMusician = new JButton("Update Musician");
+		btnUpdateMusician = new JButton("Update Musician");
 		btnUpdateMusician.setEnabled(false);
 		GridBagConstraints gbc_btnUpdateMusician = new GridBagConstraints();
 		gbc_btnUpdateMusician.insets = new Insets(0, 0, 5, 0);
 		gbc_btnUpdateMusician.gridx = 2;
 		gbc_btnUpdateMusician.gridy = 3;
 		contentPane.add(btnUpdateMusician, gbc_btnUpdateMusician);
+
+		btnUpdateMusician.addActionListener(e -> {
+			Musician toUpdate = listMusicians.getSelectedValue();
+			controller.updateMusician(toUpdate, new Musician(toUpdate.getId(), textFieldNameMusician.getText()));
+		});
 
 		JLabel lblIdAlbum = new JLabel("id Album");
 		GridBagConstraints gbc_lblIdAlbum = new GridBagConstraints();
@@ -271,6 +281,11 @@ public class DiscographySwingView extends JFrame {
 
 	private void btnDeleteMusicianEnabler() {
 		btnDeleteMusician.setEnabled(listMusicians.getSelectedIndex() != -1);
+	}
+
+	private void btnUpdateMusicianEnabler() {
+		btnUpdateMusician.setEnabled(
+				listMusicians.getSelectedIndex() != -1 && !textFieldNameMusician.getText().trim().isEmpty());
 	}
 
 }

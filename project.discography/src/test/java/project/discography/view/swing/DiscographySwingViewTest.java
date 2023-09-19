@@ -133,4 +133,41 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		verify(controller).deleteMusician(toDelete);
 	}
 
+	@Test
+	@GUITest
+	public void testUpdateMusicianButtonShouldBeEnabledWhenMusicianIsSelectedAndNameFieldIsNotEmpty() {
+		GuiActionRunner.execute(() -> view.getMusicianListModel().addElement(new Musician("1", "toUpdate")));
+		window.list("musicians").selectItem(0);
+		window.textBox("nameMusician").enterText("updated");
+		window.button(JButtonMatcher.withText("Update Musician")).requireEnabled();
+	}
+
+	@Test
+	@GUITest
+	public void testUpdateMusicianButtonShouldBeDisabledWhenNameFieldIsBlankOrMusicianIsNotSelected() {
+		JListFixture list = window.list("musicians");
+		JTextComponentFixture name = window.textBox("nameMusician");
+		JButtonFixture button = window.button(JButtonMatcher.withText("Update Musician"));
+		GuiActionRunner.execute(() -> view.getMusicianListModel().addElement(new Musician("1", "toUpdate")));
+
+		name.enterText("updated");
+		button.requireDisabled();
+
+		name.setText("");
+
+		list.selectItem(0);
+		name.enterText(" ");
+		button.requireDisabled();
+	}
+
+	@Test
+	public void testUpdateMusicianButtonShouldDelegateToDiscographyContollerUpdateMusician() {
+		Musician toUpdate = new Musician("1", "toUpdate");
+		GuiActionRunner.execute(() -> view.getMusicianListModel().addElement(toUpdate));
+		window.list("musicians").selectItem(0);
+		window.textBox("nameMusician").enterText("updated");
+		window.button(JButtonMatcher.withText("Update Musician")).click();
+		verify(controller).updateMusician(toUpdate, new Musician("1", "updated"));
+	}
+
 }
