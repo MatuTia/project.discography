@@ -40,12 +40,12 @@ public class DiscographySwingView extends JFrame {
 	private JButton btnDeleteMusician;
 	private JButton btnUpdateMusician;
 	private JButton btnAddAlbum;
+	private JButton btnDeleteAlbum;
+	private JButton btnUpdateAlbum;
 
 	private DefaultListModel<Musician> musicianListModel;
 
 	private DefaultListModel<Album> albumListModel;
-
-	private JButton btnDeleteAlbum;
 
 	DefaultListModel<Musician> getMusicianListModel() {
 		return musicianListModel;
@@ -156,6 +156,7 @@ public class DiscographySwingView extends JFrame {
 			btnUpdateMusicianEnabler();
 			btnAddAlbumEnabler();
 			btnDeleteAlbumEnabler();
+			btnUpdateAlbumEnabler();
 		});
 
 		btnAddMusician = new JButton("Add Musician");
@@ -245,6 +246,7 @@ public class DiscographySwingView extends JFrame {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				btnAddAlbumEnabler();
+				btnUpdateAlbumEnabler();
 				super.keyReleased(e);
 			}
 
@@ -266,7 +268,10 @@ public class DiscographySwingView extends JFrame {
 		scrollPaneAlbum.setViewportView(listAlbums);
 		listAlbums.setName("albums");
 
-		listAlbums.addListSelectionListener(e -> btnDeleteAlbumEnabler());
+		listAlbums.addListSelectionListener(e -> {
+			btnDeleteAlbumEnabler();
+			btnUpdateAlbumEnabler();
+		});
 
 		btnAddAlbum = new JButton("Add Album");
 		btnAddAlbum.setEnabled(false);
@@ -293,13 +298,19 @@ public class DiscographySwingView extends JFrame {
 		btnDeleteAlbum.addActionListener(
 				e -> controller.deleteAlbum(listMusicians.getSelectedValue(), listAlbums.getSelectedValue()));
 
-		JButton btnUpdateAlbum = new JButton("Update Album");
+		btnUpdateAlbum = new JButton("Update Album");
 		btnUpdateAlbum.setEnabled(false);
 		GridBagConstraints gbc_btnUpdateAlbum = new GridBagConstraints();
 		gbc_btnUpdateAlbum.insets = new Insets(0, 0, 5, 0);
 		gbc_btnUpdateAlbum.gridx = 2;
 		gbc_btnUpdateAlbum.gridy = 7;
 		contentPane.add(btnUpdateAlbum, gbc_btnUpdateAlbum);
+
+		btnUpdateAlbum.addActionListener(e -> {
+			Album album = listAlbums.getSelectedValue();
+			controller.updateAlbum(listMusicians.getSelectedValue(), album,
+					new Album(album.getId(), textFieldTitleAlbum.getText(), album.getMusician()));
+		});
 
 		JLabel labelError = new JLabel(" ");
 		labelError.setForeground(Color.RED);
@@ -333,6 +344,11 @@ public class DiscographySwingView extends JFrame {
 
 	private void btnDeleteAlbumEnabler() {
 		btnDeleteAlbum.setEnabled(listMusicians.getSelectedIndex() != -1 && listAlbums.getSelectedIndex() != -1);
+	}
+
+	private void btnUpdateAlbumEnabler() {
+		btnUpdateAlbum.setEnabled(listMusicians.getSelectedIndex() != -1 && listAlbums.getSelectedIndex() != -1
+				&& !textFieldTitleAlbum.getText().trim().isEmpty());
 	}
 
 }

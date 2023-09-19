@@ -254,7 +254,7 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 	}
 
 	@Test
-	public void testDeleteButtonShouldDelegateToDiscographyControllerDeleteAlbum() {
+	public void testDeleteAlbumButtonShouldDelegateToDiscographyControllerDeleteAlbum() {
 		Musician musician = new Musician("1", "aMusician");
 		Album album = new Album("A", "toDelete", "1");
 		GuiActionRunner.execute(() -> view.getMusicianListModel().addElement(musician));
@@ -263,6 +263,62 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		window.list("albums").selectItem(0);
 		window.button(JButtonMatcher.withText("Delete Album")).click();
 		verify(controller).deleteAlbum(musician, album);
+	}
+
+	@Test
+	@GUITest
+	public void testUpdateAlbumButtonSholdBeEnableWhenMusicianAndAlbumAreSelectedAndTitleFieldIsNotEmpty() {
+		GuiActionRunner.execute(() -> view.getMusicianListModel().addElement(new Musician("1", "aMusician")));
+		GuiActionRunner.execute(() -> view.getAlbumListModel().addElement(new Album("A", "toUpdate", "1")));
+		window.list("musicians").selectItem(0);
+		window.list("albums").selectItem(0);
+		window.textBox("titleAlbum").enterText("updated");
+		window.button(JButtonMatcher.withText("Update Album")).requireEnabled();
+	}
+
+	@Test
+	@GUITest
+	public void testUpdateAlbumButtonSholdBeDisableWhenTitleFieldIsBlanckOrMusicianOrAlbumAreNotSelected() {
+		JListFixture musicians = window.list("musicians");
+		JListFixture albums = window.list("albums");
+		JTextComponentFixture title = window.textBox("titleAlbum");
+		JButtonFixture button = window.button(JButtonMatcher.withText("Update Album"));
+		GuiActionRunner.execute(() -> view.getMusicianListModel().addElement(new Musician("1", "aMusician")));
+		GuiActionRunner.execute(() -> view.getAlbumListModel().addElement(new Album("A", "toUpdate", "1")));
+
+		musicians.selectItem(0);
+		albums.selectItem(0);
+		title.enterText(" ");
+		button.requireDisabled();
+
+		musicians.clearSelection();
+		albums.clearSelection();
+		title.setText("");
+
+		musicians.selectItem(0);
+		title.enterText("updated");
+		button.requireDisabled();
+
+		musicians.clearSelection();
+		albums.clearSelection();
+		title.setText("");
+
+		albums.selectItem(0);
+		title.enterText(" ");
+		button.requireDisabled();
+	}
+
+	@Test
+	public void testUpdateAlbumButtonShouldDelegateToDiscographyControllerUpdateAlbum() {
+		Musician musician = new Musician("1", "aMusician");
+		Album toUpdate = new Album("A", "toUpdate", "1");
+		GuiActionRunner.execute(() -> view.getMusicianListModel().addElement(musician));
+		GuiActionRunner.execute(() -> view.getAlbumListModel().addElement(toUpdate));
+		window.list("musicians").selectItem(0);
+		window.list("albums").selectItem(0);
+		window.textBox("titleAlbum").enterText("updated");
+		window.button(JButtonMatcher.withText("Update Album")).click();
+		verify(controller).updateAlbum(musician, toUpdate, new Album("A", "updated", "1"));
 	}
 
 }
