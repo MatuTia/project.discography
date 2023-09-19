@@ -9,6 +9,7 @@ import org.bson.Document;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 
 import project.discography.model.Musician;
 import project.discography.repository.MusicianRepository;
@@ -40,18 +41,17 @@ public class MusicianMongoRepository implements MusicianRepository {
 
 	@Override
 	public void saveMusician(Musician toSave) {
-		 collection.insertOne(new Document().append(ID, toSave.getId()).append(NAME, toSave.getName()));
+		collection.insertOne(new Document().append(ID, toSave.getId()).append(NAME, toSave.getName()));
 	}
 
 	@Override
 	public void deleteMusician(String id) {
-		  collection.deleteOne(Filters.eq(ID, id));
+		collection.deleteOne(Filters.eq(ID, id));
 	}
 
 	@Override
 	public void updateMusician(String id, Musician updated) {
-		// TODO Auto-generated method stub
-
+		collection.updateOne(Filters.eq(ID, id), Updates.set(NAME, updated.getName()));
 	}
 
 	private Musician fromDocumentToMusician(Document document) {
