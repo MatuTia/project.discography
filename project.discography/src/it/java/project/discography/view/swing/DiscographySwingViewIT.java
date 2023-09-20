@@ -224,4 +224,46 @@ public class DiscographySwingViewIT extends AssertJSwingJUnitTestCase {
 		window.label("error").requireText("Already exist an album with id A: A - existingAlbum - 1");
 	}
 
+	@Test
+	@GUITest
+	public void testDeleteAlbumButtonSucces() {
+		GuiActionRunner.execute(() -> {
+			Musician aMusician = new Musician("1", "aMusician");
+			controller.newMusician(aMusician);
+			controller.newAlbum(aMusician, new Album("A", "toDelete", "1"));
+		});
+		window.list("musicians").selectItem(0);
+		window.list("albums").selectItem(0);
+		window.button(JButtonMatcher.withText("Delete Album")).click();
+		assertThat(window.list("musicians").contents()).containsExactly("1 - aMusician");
+		assertThat(window.list("albums").contents()).isEmpty();
+	}
+
+	@Test
+	@GUITest
+	public void testDeleteAlbumButtonErrorNotFoundMusician() {
+		GuiActionRunner.execute(() -> controller.newMusician(new Musician("1", "aMusician")));
+		window.list("musicians").selectItem(0);
+		GuiActionRunner.execute(() -> view.getAlbumListModel().addElement(new Album("A", "toDelete", "1")));
+		musicianRepository.deleteMusician("1");
+		window.list("albums").selectItem(0);
+		window.button(JButtonMatcher.withText("Delete Album")).click();
+		assertThat(window.list("musicians").contents()).isEmpty();
+		assertThat(window.list("albums").contents()).isEmpty();
+		window.label("error").requireText("Not exist a musician with id 1: 1 - aMusician");
+	}
+
+	@Test
+	@GUITest
+	public void testDeleteAlbumButtonErrorNotFoundAlbum() {
+		GuiActionRunner.execute(() -> controller.newMusician(new Musician("1", "aMusician")));
+		window.list("musicians").selectItem(0);
+		GuiActionRunner.execute(() -> view.getAlbumListModel().addElement(new Album("A", "toDelete", "1")));
+		window.list("albums").selectItem(0);
+		window.button(JButtonMatcher.withText("Delete Album")).click();
+		assertThat(window.list("musicians").contents()).containsExactly("1 - aMusician");
+		assertThat(window.list("albums").contents()).isEmpty();
+		window.label("error").requireText("Not exist an album with id A: A - toDelete - 1");
+	}
+
 }
