@@ -52,7 +52,6 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 
 	private DefaultListModel<Album> albumListModel;
 
-
 	DefaultListModel<Musician> getMusicianListModel() {
 		return musicianListModel;
 	}
@@ -379,6 +378,10 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 		labelError.setText(" ");
 	}
 
+	private void removeAlbumsfromList() {
+		albumListModel.clear();
+	}
+
 	@Override
 	public void showAllMusicians(List<Musician> musicians) {
 		musicians.stream().forEach(musicianListModel::addElement);
@@ -398,8 +401,8 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 
 	@Override
 	public void musicianRemoved(Musician removed) {
-		// TODO Auto-generated method stub
-
+		musicianListModel.removeElement(removed);
+		removeAlbumsfromList();
 	}
 
 	@Override

@@ -340,4 +340,20 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		window.label("error").requireText(" ");
 	}
 
+	@Test
+	public void testDeleteMusicianShouldRemoveMusicianFromTheMusiciansResetErrorLabelAndRemoveAlbumsFromList() {
+		Musician notDelete = new Musician("1", "notDelete");
+		Musician toDelete = new Musician("2", "toDelete");
+		Album anAlbum = new Album("A", "anAlbum", "2");
+		GuiActionRunner.execute(() -> {
+			view.getMusicianListModel().addElement(notDelete);
+			view.getMusicianListModel().addElement(toDelete);
+			view.getAlbumListModel().addElement(anAlbum);
+		});
+		GuiActionRunner.execute(() -> view.musicianRemoved(toDelete));
+		assertThat(window.list("musicians").contents()).containsExactly("1 - notDelete");
+		assertThat(window.list("albums").contents()).isEmpty();
+		window.label("error").requireText(" ");
+	}
+
 }
