@@ -399,4 +399,12 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		assertThat(window.list("albums").contents()).containsExactly("A - anAlbum - 1", "B - anotherAlbum - 1");
 	}
 
+	@Test
+	public void testAlbumAddedShouldAddAlbumDescriptionToAlbumsAndResetErrorLabel() {
+		Album newAlbum = new Album("A", "newAlbum", "1");
+		GuiActionRunner.execute(() -> view.albumAdded(newAlbum));
+		assertThat(window.list("albums").contents()).containsExactly("A - newAlbum - 1");
+		window.label("error").requireText(" ");
+	}
+
 }

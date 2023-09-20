@@ -442,8 +442,8 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 
 	@Override
 	public void albumAdded(Album added) {
-		// TODO Auto-generated method stub
-
+		albumListModel.addElement(added);
+		resetErrorLabel();
 	}
 
 	@Override
