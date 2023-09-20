@@ -367,4 +367,11 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		window.label("error").requireText(" ");
 	}
 
+	@Test
+	public void testshowErrorDuplicateMusicianIdShouldShowErrorWithExistingMusicianData() {
+		GuiActionRunner.execute(
+				() -> view.showErrorDuplicateMusicianId("Error message", new Musician("1", "existingMusician")));
+		window.label("error").requireText("Error message: 1 - existingMusician");
+	}
+
 }

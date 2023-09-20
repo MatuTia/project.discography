@@ -395,8 +395,7 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 
 	@Override
 	public void showErrorDuplicateMusicianId(String message, Musician existingMusician) {
-		// TODO Auto-generated method stub
-
+		labelError.setText(message + ": " + displayMusician(existingMusician));
 	}
 
 	@Override
