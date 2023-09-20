@@ -82,4 +82,13 @@ public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
 		assertThat(musicianRepository.findMusicianById("1")).isEqualTo(new Musician("1", "newMusician"));
 	}
 
+	@Test
+	public void testDeleteMusician() {
+		musicianRepository.saveMusician(new Musician("1", "toDelete"));
+		GuiActionRunner.execute(() -> controller.allMusicians());
+		window.list("musicians").selectItem(0);
+		window.button(JButtonMatcher.withText("Delete Musician")).click();
+		assertThat(musicianRepository.findMusicianById("1")).isNull();
+	}
+
 }
