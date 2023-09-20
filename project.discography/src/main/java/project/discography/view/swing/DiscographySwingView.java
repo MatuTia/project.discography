@@ -46,10 +46,12 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 	private JButton btnAddAlbum;
 	private JButton btnDeleteAlbum;
 	private JButton btnUpdateAlbum;
+	private JLabel labelError;
 
 	private DefaultListModel<Musician> musicianListModel;
 
 	private DefaultListModel<Album> albumListModel;
+
 
 	DefaultListModel<Musician> getMusicianListModel() {
 		return musicianListModel;
@@ -330,7 +332,7 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 					new Album(album.getId(), textFieldTitleAlbum.getText(), album.getMusician()));
 		});
 
-		JLabel labelError = new JLabel(" ");
+		labelError = new JLabel(" ");
 		labelError.setForeground(Color.RED);
 		labelError.setName("error");
 		GridBagConstraints gbc_labelError = new GridBagConstraints();
@@ -373,6 +375,10 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 		return musician.getId() + " - " + musician.getName();
 	}
 
+	private void resetErrorLabel() {
+		labelError.setText(" ");
+	}
+
 	@Override
 	public void showAllMusicians(List<Musician> musicians) {
 		musicians.stream().forEach(musicianListModel::addElement);
@@ -380,8 +386,8 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 
 	@Override
 	public void musicianAdded(Musician added) {
-		// TODO Auto-generated method stub
-
+		musicianListModel.addElement(added);
+		resetErrorLabel();
 	}
 
 	@Override

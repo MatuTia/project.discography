@@ -331,4 +331,13 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		GuiActionRunner.execute(() -> view.showAllMusicians(Arrays.asList(aMusician, anotherMusician)));
 		assertThat(window.list("musicians").contents()).containsExactly("1 - aMusician", "2 - anotherMusician");
 	}
+
+	@Test
+	public void testMusicianAddedShouldAddMusicianDestriptionToMusiciansAndResetErrorLabel() {
+		Musician newMusician = new Musician("1", "newMusician");
+		GuiActionRunner.execute(() -> view.musicianAdded(newMusician));
+		assertThat(window.list("musicians").contents()).containsExactly("1 - newMusician");
+		window.label("error").requireText(" ");
+	}
+
 }
