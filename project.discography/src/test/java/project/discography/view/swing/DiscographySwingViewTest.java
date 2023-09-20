@@ -407,4 +407,17 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		window.label("error").requireText(" ");
 	}
 
+	@Test
+	public void testAlbumRemovedShouldRemoveAlbumDescriptionFromTheListAndResetErrorLabel() {
+		Album notDelete = new Album("A", "notDelete", "1");
+		Album toDelete = new Album("B", "toDelete", "1");
+		GuiActionRunner.execute(() -> {
+			view.getAlbumListModel().addElement(notDelete);
+			view.getAlbumListModel().addElement(toDelete);
+		});
+		GuiActionRunner.execute(() -> view.albumRemoved(toDelete));
+		assertThat(window.list("albums").contents()).containsExactly("A - notDelete - 1");
+		window.label("error").requireText(" ");
+	}
+
 }
