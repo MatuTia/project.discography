@@ -180,4 +180,48 @@ public class DiscographySwingViewIT extends AssertJSwingJUnitTestCase {
 		window.label("error").requireText("Not exist a musician with id 1: 1 - aMusician");
 	}
 
+	@Test
+	@GUITest
+	public void testAddAlbumButtonSucces() {
+		GuiActionRunner.execute(() -> controller.newMusician(new Musician("1", "aMusician")));
+		window.list("musicians").selectItem(0);
+		window.textBox("idAlbum").enterText("A");
+		window.textBox("titleAlbum").enterText("newAlbum");
+		window.button(JButtonMatcher.withText("Add Album")).click();
+		assertThat(window.list("musicians").contents()).containsExactly("1 - aMusician");
+		assertThat(window.list("albums").contents()).containsExactly("A - newAlbum - 1");
+	}
+
+	@Test
+	@GUITest
+	public void testAddAlbumButtonErrorMusiciaNotFound() {
+		GuiActionRunner.execute(() -> {
+			Musician aMusician = new Musician("1", "aMusician");
+			controller.newMusician(aMusician);
+			controller.newAlbum(aMusician, new Album("Z", "anAlbum", "1"));
+		});
+		window.list("musicians").selectItem(0);
+		musicianRepository.deleteMusician("1");
+		window.textBox("idAlbum").enterText("A");
+		window.textBox("titleAlbum").enterText("newAlbum");
+		window.button(JButtonMatcher.withText("Add Album")).click();
+		assertThat(window.list("musicians").contents()).isEmpty();
+		assertThat(window.list("albums").contents()).isEmpty();
+		window.label("error").requireText("Not exist a musician with id 1: 1 - aMusician");
+	}
+
+	@Test
+	@GUITest
+	public void testAddAlbumButtonErrorDuplicateAlbumID() {
+		GuiActionRunner.execute(() -> controller.newMusician(new Musician("1", "aMusician")));
+		window.list("musicians").selectItem(0);
+		albumRepository.saveAlbum(new Album("A", "existingAlbum", "1"));
+		window.textBox("idAlbum").enterText("A");
+		window.textBox("titleAlbum").enterText("newAlbum");
+		window.button(JButtonMatcher.withText("Add Album")).click();
+		assertThat(window.list("musicians").contents()).containsExactly("1 - aMusician");
+		assertThat(window.list("albums").contents()).isEmpty();
+		window.label("error").requireText("Already exist an album with id A: A - existingAlbum - 1");
+	}
+
 }
