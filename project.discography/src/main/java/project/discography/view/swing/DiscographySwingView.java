@@ -1,6 +1,7 @@
 package project.discography.view.swing;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -8,6 +9,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -159,6 +161,20 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 			btnAddAlbumEnabler();
 			btnDeleteAlbumEnabler();
 			btnUpdateAlbumEnabler();
+		});
+
+		listMusicians.setCellRenderer(new DefaultListCellRenderer() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				Musician musician = (Musician) value;
+				return super.getListCellRendererComponent(list, displayMusician(musician), index, isSelected,
+						cellHasFocus);
+			}
+
 		});
 
 		btnAddMusician = new JButton("Add Musician");
@@ -353,10 +369,13 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 				&& !textFieldTitleAlbum.getText().trim().isEmpty());
 	}
 
+	private String displayMusician(Musician musician) {
+		return musician.getId() + " - " + musician.getName();
+	}
+
 	@Override
 	public void showAllMusicians(List<Musician> musicians) {
-		// TODO Auto-generated method stub
-
+		musicians.stream().forEach(musicianListModel::addElement);
 	}
 
 	@Override

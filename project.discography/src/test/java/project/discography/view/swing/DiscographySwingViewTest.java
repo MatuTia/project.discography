@@ -1,8 +1,11 @@
 package project.discography.view.swing;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mockitoSession;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+
+import java.util.Arrays;
 
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
@@ -321,4 +324,11 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		verify(controller).updateAlbum(musician, toUpdate, new Album("A", "updated", "1"));
 	}
 
+	@Test
+	public void testShowAllMusiciansShouldAddMusiciansDescriptionsToMusicians() {
+		Musician aMusician = new Musician("1", "aMusician");
+		Musician anotherMusician = new Musician("2", "anotherMusician");
+		GuiActionRunner.execute(() -> view.showAllMusicians(Arrays.asList(aMusician, anotherMusician)));
+		assertThat(window.list("musicians").contents()).containsExactly("1 - aMusician", "2 - anotherMusician");
+	}
 }
