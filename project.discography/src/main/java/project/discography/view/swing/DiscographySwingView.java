@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -21,8 +22,9 @@ import javax.swing.border.EmptyBorder;
 import project.discography.controller.DiscographyController;
 import project.discography.model.Album;
 import project.discography.model.Musician;
+import project.discography.view.DiscographyView;
 
-public class DiscographySwingView extends JFrame {
+public class DiscographySwingView extends JFrame implements DiscographyView {
 
 	private static final long serialVersionUID = 1L;
 
@@ -349,6 +351,78 @@ public class DiscographySwingView extends JFrame {
 	private void btnUpdateAlbumEnabler() {
 		btnUpdateAlbum.setEnabled(listMusicians.getSelectedIndex() != -1 && listAlbums.getSelectedIndex() != -1
 				&& !textFieldTitleAlbum.getText().trim().isEmpty());
+	}
+
+	@Override
+	public void showAllMusicians(List<Musician> musicians) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void musicianAdded(Musician added) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void showErrorDuplicateMusicianId(String message, Musician existingMusician) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void musicianRemoved(Musician removed) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void showErrorMusicianNotFound(String message, Musician selectedMusician) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void musicianUpdated(Musician toUpdate, Musician updated) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void showAllAlbums(List<Album> albums) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void albumAdded(Album added) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void showErrorDuplicateAlbumId(String message, Album existingAlbum) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void albumRemoved(Album removed) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void showErrorAlbumNotFound(String message, Album selectedAlbum) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void albumUpdated(Album toUpdate, Album updated) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
