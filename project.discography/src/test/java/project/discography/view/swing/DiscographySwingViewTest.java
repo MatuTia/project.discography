@@ -1,8 +1,11 @@
 package project.discography.view.swing;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mockitoSession;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+
+import java.util.Arrays;
 
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
@@ -319,6 +322,134 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		window.textBox("titleAlbum").enterText("updated");
 		window.button(JButtonMatcher.withText("Update Album")).click();
 		verify(controller).updateAlbum(musician, toUpdate, new Album("A", "updated", "1"));
+	}
+
+	@Test
+	public void testShowAllMusiciansShouldAddMusiciansDescriptionsToMusicians() {
+		Musician aMusician = new Musician("1", "aMusician");
+		Musician anotherMusician = new Musician("2", "anotherMusician");
+		GuiActionRunner.execute(() -> view.showAllMusicians(Arrays.asList(aMusician, anotherMusician)));
+		assertThat(window.list("musicians").contents()).containsExactly("1 - aMusician", "2 - anotherMusician");
+	}
+
+	@Test
+	public void testMusicianAddedShouldAddMusicianDestriptionToMusiciansAndResetErrorLabel() {
+		Musician newMusician = new Musician("1", "newMusician");
+		GuiActionRunner.execute(() -> view.musicianAdded(newMusician));
+		assertThat(window.list("musicians").contents()).containsExactly("1 - newMusician");
+		window.label("error").requireText(" ");
+	}
+
+	@Test
+	public void testDeleteMusicianShouldRemoveMusicianFromTheMusiciansResetErrorLabelAndRemoveAlbumsFromList() {
+		Musician notDelete = new Musician("1", "notDelete");
+		Musician toDelete = new Musician("2", "toDelete");
+		Album anAlbum = new Album("A", "anAlbum", "2");
+		GuiActionRunner.execute(() -> {
+			view.getMusicianListModel().addElement(notDelete);
+			view.getMusicianListModel().addElement(toDelete);
+			view.getAlbumListModel().addElement(anAlbum);
+		});
+		GuiActionRunner.execute(() -> view.musicianRemoved(toDelete));
+		assertThat(window.list("musicians").contents()).containsExactly("1 - notDelete");
+		assertThat(window.list("albums").contents()).isEmpty();
+		window.label("error").requireText(" ");
+	}
+
+	@Test
+	public void testUpdateMusicianShouldUpdateTheNameOfMusicianAndResetErrorLabel() {
+		Musician toUpdate = new Musician("1", "toUpdate");
+		GuiActionRunner.execute(() -> {
+			view.getMusicianListModel().addElement(toUpdate);
+		});
+		GuiActionRunner.execute(() -> view.musicianUpdated(toUpdate, new Musician("1", "updated")));
+		assertThat(window.list("musicians").contents()).containsExactly("1 - updated");
+		window.label("error").requireText(" ");
+	}
+
+	@Test
+	public void testshowErrorDuplicateMusicianIdShouldShowErrorWithExistingMusicianData() {
+		GuiActionRunner.execute(
+				() -> view.showErrorDuplicateMusicianId("Error message", new Musician("1", "existingMusician")));
+		window.label("error").requireText("Error message: 1 - existingMusician");
+	}
+
+	@Test
+	public void testShowErrorMusicianNotFound() {
+		Musician aMusician = new Musician("1", "aMusician");
+		Musician notFound = new Musician("2", "notFound");
+		Album anAlbum = new Album("A", "anAlbum", "2");
+		GuiActionRunner.execute(() -> {
+			view.getMusicianListModel().addElement(aMusician);
+			view.getMusicianListModel().addElement(notFound);
+			view.getAlbumListModel().addElement(anAlbum);
+		});
+		GuiActionRunner.execute(() -> view.showErrorMusicianNotFound("Error message", notFound));
+		assertThat(window.list("musicians").contents()).containsExactly("1 - aMusician");
+		assertThat(window.list("albums").contents()).isEmpty();
+		window.label("error").requireText("Error message: 2 - notFound");
+	}
+
+	@Test
+	public void testShowAllAlbumsShouldAddAlbumsDescriptionToAlbumsAfterClearTheAlbums() {
+		GuiActionRunner.execute(() -> view.getAlbumListModel().addElement(new Album("Z", "anAlbum", "2")));
+		Album anAlbum = new Album("A", "anAlbum", "1");
+		Album anotherAlbum = new Album("B", "anotherAlbum", "1");
+		GuiActionRunner.execute(() -> view.showAllAlbums(Arrays.asList(anAlbum, anotherAlbum)));
+		assertThat(window.list("albums").contents()).containsExactly("A - anAlbum - 1", "B - anotherAlbum - 1");
+	}
+
+	@Test
+	public void testAlbumAddedShouldAddAlbumDescriptionToAlbumsAndResetErrorLabel() {
+		Album newAlbum = new Album("A", "newAlbum", "1");
+		GuiActionRunner.execute(() -> view.albumAdded(newAlbum));
+		assertThat(window.list("albums").contents()).containsExactly("A - newAlbum - 1");
+		window.label("error").requireText(" ");
+	}
+
+	@Test
+	public void testAlbumRemovedShouldRemoveAlbumDescriptionFromTheListAndResetErrorLabel() {
+		Album notDelete = new Album("A", "notDelete", "1");
+		Album toDelete = new Album("B", "toDelete", "1");
+		GuiActionRunner.execute(() -> {
+			view.getAlbumListModel().addElement(notDelete);
+			view.getAlbumListModel().addElement(toDelete);
+		});
+		GuiActionRunner.execute(() -> view.albumRemoved(toDelete));
+		assertThat(window.list("albums").contents()).containsExactly("A - notDelete - 1");
+		window.label("error").requireText(" ");
+	}
+
+	@Test
+	public void testAlbumUpdatedShouldUpdateTitleAlbumAndResetErrorLabel() {
+		Album toUpdate = new Album("A", "toUpdate", "1");
+		Album updated = new Album("A", "updated", "1");
+		GuiActionRunner.execute(() -> {
+			view.getAlbumListModel().addElement(toUpdate);
+		});
+		GuiActionRunner.execute(() -> view.albumUpdated(toUpdate, updated));
+		assertThat(window.list("albums").contents()).containsExactly("A - updated - 1");
+		window.label("error").requireText(" ");
+	}
+
+	@Test
+	public void testShowErrorDuplicateAlbumIdShouldShowErrorWitExistingAlbumData() {
+		GuiActionRunner
+				.execute(() -> view.showErrorDuplicateAlbumId("Error message", new Album("A", "existingAlbum", "1")));
+		window.label("error").requireText("Error message: A - existingAlbum - 1");
+	}
+
+	@Test
+	public void testShowErrorAlbumNotFound() {
+		Album anAlbum = new Album("A", "anAlbum", "1");
+		Album notFound = new Album("B", "notFound", "1");
+		GuiActionRunner.execute(() -> {
+			view.getAlbumListModel().addElement(notFound);
+			view.getAlbumListModel().addElement(anAlbum);
+		});
+		GuiActionRunner.execute(() -> view.showErrorAlbumNotFound("Error message", notFound));
+		assertThat(window.list("albums").contents()).containsExactly("A - anAlbum - 1");
+		window.label("error").requireText("Error message: B - notFound - 1");
 	}
 
 }

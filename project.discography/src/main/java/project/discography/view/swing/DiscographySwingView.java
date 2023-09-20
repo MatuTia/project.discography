@@ -1,12 +1,15 @@
 package project.discography.view.swing;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,8 +24,9 @@ import javax.swing.border.EmptyBorder;
 import project.discography.controller.DiscographyController;
 import project.discography.model.Album;
 import project.discography.model.Musician;
+import project.discography.view.DiscographyView;
 
-public class DiscographySwingView extends JFrame {
+public class DiscographySwingView extends JFrame implements DiscographyView {
 
 	private static final long serialVersionUID = 1L;
 
@@ -42,6 +46,7 @@ public class DiscographySwingView extends JFrame {
 	private JButton btnAddAlbum;
 	private JButton btnDeleteAlbum;
 	private JButton btnUpdateAlbum;
+	private JLabel labelError;
 
 	private DefaultListModel<Musician> musicianListModel;
 
@@ -159,6 +164,20 @@ public class DiscographySwingView extends JFrame {
 			btnUpdateAlbumEnabler();
 		});
 
+		listMusicians.setCellRenderer(new DefaultListCellRenderer() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				Musician musician = (Musician) value;
+				return super.getListCellRendererComponent(list, displayMusician(musician), index, isSelected,
+						cellHasFocus);
+			}
+
+		});
+
 		btnAddMusician = new JButton("Add Musician");
 		btnAddMusician.setEnabled(false);
 		GridBagConstraints gbc_btnAddMusician = new GridBagConstraints();
@@ -273,6 +292,19 @@ public class DiscographySwingView extends JFrame {
 			btnUpdateAlbumEnabler();
 		});
 
+		listAlbums.setCellRenderer(new DefaultListCellRenderer() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				Album album = (Album) value;
+				return super.getListCellRendererComponent(list, displayAlbum(album), index, isSelected, cellHasFocus);
+			}
+
+		});
+
 		btnAddAlbum = new JButton("Add Album");
 		btnAddAlbum.setEnabled(false);
 		GridBagConstraints gbc_btnAddAlbum = new GridBagConstraints();
@@ -312,7 +344,7 @@ public class DiscographySwingView extends JFrame {
 					new Album(album.getId(), textFieldTitleAlbum.getText(), album.getMusician()));
 		});
 
-		JLabel labelError = new JLabel(" ");
+		labelError = new JLabel(" ");
 		labelError.setForeground(Color.RED);
 		labelError.setName("error");
 		GridBagConstraints gbc_labelError = new GridBagConstraints();
@@ -349,6 +381,92 @@ public class DiscographySwingView extends JFrame {
 	private void btnUpdateAlbumEnabler() {
 		btnUpdateAlbum.setEnabled(listMusicians.getSelectedIndex() != -1 && listAlbums.getSelectedIndex() != -1
 				&& !textFieldTitleAlbum.getText().trim().isEmpty());
+	}
+
+	private String displayMusician(Musician musician) {
+		return musician.getId() + " - " + musician.getName();
+	}
+
+	private String displayAlbum(Album album) {
+		return album.getId() + " - " + album.getTitle() + " - " + album.getMusician();
+	}
+
+	private void resetErrorLabel() {
+		labelError.setText(" ");
+	}
+
+	private void removeMusician(Musician musician) {
+		musicianListModel.removeElement(musician);
+		albumListModel.clear();
+	}
+
+	@Override
+	public void showAllMusicians(List<Musician> musicians) {
+		musicians.stream().forEach(musicianListModel::addElement);
+	}
+
+	@Override
+	public void musicianAdded(Musician added) {
+		musicianListModel.addElement(added);
+		resetErrorLabel();
+	}
+
+	@Override
+	public void showErrorDuplicateMusicianId(String message, Musician existingMusician) {
+		labelError.setText(message + ": " + displayMusician(existingMusician));
+	}
+
+	@Override
+	public void musicianRemoved(Musician removed) {
+		removeMusician(removed);
+		resetErrorLabel();
+	}
+
+	@Override
+	public void showErrorMusicianNotFound(String message, Musician selectedMusician) {
+		labelError.setText(message + ": " + displayMusician(selectedMusician));
+		removeMusician(selectedMusician);
+	}
+
+	@Override
+	public void musicianUpdated(Musician toUpdate, Musician updated) {
+		musicianListModel.set(musicianListModel.indexOf(toUpdate), updated);
+		resetErrorLabel();
+	}
+
+	@Override
+	public void showAllAlbums(List<Album> albums) {
+		albumListModel.clear();
+		albums.stream().forEach(albumListModel::addElement);
+	}
+
+	@Override
+	public void albumAdded(Album added) {
+		albumListModel.addElement(added);
+		resetErrorLabel();
+	}
+
+	@Override
+	public void showErrorDuplicateAlbumId(String message, Album existingAlbum) {
+		labelError.setText(message + ": " + displayAlbum(existingAlbum));
+	}
+
+	@Override
+	public void albumRemoved(Album removed) {
+		albumListModel.removeElement(removed);
+		resetErrorLabel();
+	}
+
+	@Override
+	public void showErrorAlbumNotFound(String message, Album selectedAlbum) {
+		labelError.setText(message + ": " + displayAlbum(selectedAlbum));
+		albumListModel.removeElement(selectedAlbum);
+	}
+
+	@Override
+	public void albumUpdated(Album toUpdate, Album updated) {
+		albumListModel.set(albumListModel.indexOf(toUpdate), updated);
+		resetErrorLabel();
 	}
 
 }
