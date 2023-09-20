@@ -21,6 +21,7 @@ import com.mongodb.ServerAddress;
 import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import project.discography.controller.DiscographyController;
+import project.discography.model.Album;
 import project.discography.model.Musician;
 import project.discography.repository.AlbumRepository;
 import project.discography.repository.MusicianRepository;
@@ -107,6 +108,30 @@ public class DiscographySwingViewIT extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Add Musician")).click();
 		assertThat(window.list("musicians").contents()).isEmpty();
 		window.label("error").requireText("Already exist a musician with id 1: 1 - existingMusician");
+	}
+
+	@Test
+	@GUITest
+	public void testDeleteMusicianButtongSucces() {
+		GuiActionRunner.execute(() -> controller.newMusician(new Musician("1", "toDelete")));
+		window.list("musicians").selectItem(0);
+		window.button(JButtonMatcher.withText("Delete Musician")).click();
+		assertThat(window.list("musicians").contents()).isEmpty();
+	}
+
+	@Test
+	@GUITest
+	public void testDeleteMusicianButtongErrorNotFoundMusician() {
+		GuiActionRunner.execute(() -> {
+			controller.newMusician(new Musician("1", "toDelete"));
+			view.getAlbumListModel().addElement(new Album("A", "anAlbum", "1"));
+		});
+		window.list("musicians").selectItem(0);
+		musicianRepository.deleteMusician("1");
+		window.button(JButtonMatcher.withText("Delete Musician")).click();
+		assertThat(window.list("musicians").contents()).isEmpty();
+		assertThat(window.list("albums").contents()).isEmpty();
+		window.label("error").requireText("Not exist a musician with id 1: 1 - toDelete");
 	}
 
 }
