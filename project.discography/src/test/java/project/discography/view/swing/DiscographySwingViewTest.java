@@ -390,4 +390,13 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		window.label("error").requireText("Error message: 2 - notFound");
 	}
 
+	@Test
+	public void testShowAllAlbumsShouldAddAlbumsDescriptionToAlbumsAfterClearTheAlbums() {
+		GuiActionRunner.execute(() -> view.getAlbumListModel().addElement(new Album("Z", "anAlbum", "2")));
+		Album anAlbum = new Album("A", "anAlbum", "1");
+		Album anotherAlbum = new Album("B", "anotherAlbum", "1");
+		GuiActionRunner.execute(() -> view.showAllAlbums(Arrays.asList(anAlbum, anotherAlbum)));
+		assertThat(window.list("albums").contents()).containsExactly("A - anAlbum - 1", "B - anotherAlbum - 1");
+	}
+
 }

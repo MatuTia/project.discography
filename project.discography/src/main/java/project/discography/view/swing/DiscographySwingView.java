@@ -292,6 +292,19 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 			btnUpdateAlbumEnabler();
 		});
 
+		listAlbums.setCellRenderer(new DefaultListCellRenderer() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+					boolean cellHasFocus) {
+				Album album = (Album) value;
+				return super.getListCellRendererComponent(list, displayAlbum(album), index, isSelected, cellHasFocus);
+			}
+
+		});
+
 		btnAddAlbum = new JButton("Add Album");
 		btnAddAlbum.setEnabled(false);
 		GridBagConstraints gbc_btnAddAlbum = new GridBagConstraints();
@@ -374,6 +387,10 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 		return musician.getId() + " - " + musician.getName();
 	}
 
+	private String displayAlbum(Album album) {
+		return album.getId() + " - " + album.getTitle() + " - " + album.getMusician();
+	}
+
 	private void resetErrorLabel() {
 		labelError.setText(" ");
 	}
@@ -419,8 +436,8 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 
 	@Override
 	public void showAllAlbums(List<Album> albums) {
-		// TODO Auto-generated method stub
-
+		albumListModel.clear();
+		albums.stream().forEach(albumListModel::addElement);
 	}
 
 	@Override
