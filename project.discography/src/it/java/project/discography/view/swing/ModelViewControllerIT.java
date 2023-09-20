@@ -116,6 +116,16 @@ public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
 		assertThat(albumRepository.findAlbumById("A")).isNull();
 	}
 
+	@Test
+	public void testUpdateAlbum() {
+		albumRepository.saveAlbum(new Album("A", "toUpdate", "1"));
+		selectNewMusician("1", "aMusician");
+		window.list("albums").selectItem(0);
+		window.textBox("titleAlbum").enterText("updated");
+		window.button(JButtonMatcher.withText("Update Album")).click();
+		assertThat(albumRepository.findAlbumById("A")).isEqualTo(new Album("A", "updated", "1"));
+	}
+
 	private void selectNewMusician(String id, String name) {
 		musicianRepository.saveMusician(new Musician("1", "aMusician"));
 		GuiActionRunner.execute(() -> controller.allMusicians());
