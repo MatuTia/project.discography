@@ -434,8 +434,22 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 
 	@Test
 	public void testShowErrorDuplicateAlbumIdShouldShowErrorWitExistingAlbumData() {
-		GuiActionRunner.execute(() -> view.showErrorDuplicateAlbumId("Error message", new Album("A", "existingAlbum", "1")));
+		GuiActionRunner
+				.execute(() -> view.showErrorDuplicateAlbumId("Error message", new Album("A", "existingAlbum", "1")));
 		window.label("error").requireText("Error message: A - existingAlbum - 1");
+	}
+
+	@Test
+	public void testShowErrorAlbumNotFound() {
+		Album anAlbum = new Album("A", "anAlbum", "1");
+		Album notFound = new Album("B", "notFound", "1");
+		GuiActionRunner.execute(() -> {
+			view.getAlbumListModel().addElement(notFound);
+			view.getAlbumListModel().addElement(anAlbum);
+		});
+		GuiActionRunner.execute(() -> view.showErrorAlbumNotFound("Error message", notFound));
+		assertThat(window.list("albums").contents()).containsExactly("A - anAlbum - 1");
+		window.label("error").requireText("Error message: B - notFound - 1");
 	}
 
 }

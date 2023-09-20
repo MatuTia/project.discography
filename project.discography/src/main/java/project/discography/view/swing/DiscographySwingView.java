@@ -459,8 +459,8 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 
 	@Override
 	public void showErrorAlbumNotFound(String message, Album selectedAlbum) {
-		// TODO Auto-generated method stub
-
+		labelError.setText(message + ": " + displayAlbum(selectedAlbum));
+		albumListModel.removeElement(selectedAlbum);
 	}
 
 	@Override
