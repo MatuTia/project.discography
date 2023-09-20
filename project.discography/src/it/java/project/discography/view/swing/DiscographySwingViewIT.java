@@ -134,4 +134,30 @@ public class DiscographySwingViewIT extends AssertJSwingJUnitTestCase {
 		window.label("error").requireText("Not exist a musician with id 1: 1 - toDelete");
 	}
 
+	@Test
+	@GUITest
+	public void testUpdateMusicianButtonSucces() {
+		GuiActionRunner.execute(() -> controller.newMusician(new Musician("1", "toUpdate")));
+		window.list("musicians").selectItem(0);
+		window.textBox("nameMusician").enterText("updated");
+		window.button(JButtonMatcher.withText("Update Musician")).click();
+		assertThat(window.list("musicians").contents()).containsExactly("1 - updated");
+	}
+
+	@Test
+	@GUITest
+	public void testUpdateMusicianButtonErrorNotFoundMusician() {
+		GuiActionRunner.execute(() -> {
+			controller.newMusician(new Musician("1", "toUpdate"));
+			view.getAlbumListModel().addElement(new Album("A", "anAlbum", "1"));
+		});
+		window.list("musicians").selectItem(0);
+		musicianRepository.deleteMusician("1");
+		window.textBox("nameMusician").enterText("updated");
+		window.button(JButtonMatcher.withText("Update Musician")).click();
+		assertThat(window.list("musicians").contents()).isEmpty();
+		assertThat(window.list("albums").contents()).isEmpty();
+		window.label("error").requireText("Not exist a musician with id 1: 1 - toUpdate");
+	}
+
 }
