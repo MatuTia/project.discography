@@ -356,4 +356,15 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		window.label("error").requireText(" ");
 	}
 
+	@Test
+	public void testUpdateMusicianShouldUpdateTheNameOfMusicianAndResetErrorLabel() {
+		Musician toUpdate = new Musician("1", "toUpdate");
+		GuiActionRunner.execute(() -> {
+			view.getMusicianListModel().addElement(toUpdate);
+		});
+		GuiActionRunner.execute(() -> view.musicianUpdated(toUpdate, new Musician("1", "updated")));
+		assertThat(window.list("musicians").contents()).containsExactly("1 - updated");
+		window.label("error").requireText(" ");
+	}
+
 }

@@ -413,8 +413,8 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 
 	@Override
 	public void musicianUpdated(Musician toUpdate, Musician updated) {
-		// TODO Auto-generated method stub
-
+		musicianListModel.set(musicianListModel.indexOf(toUpdate), updated);
+		resetErrorLabel();
 	}
 
 	@Override
