@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.net.InetSocketAddress;
 
 import org.assertj.swing.annotation.GUITest;
+import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.FrameFixture;
 import org.assertj.swing.junit.runner.GUITestRunner;
@@ -86,6 +87,26 @@ public class DiscographySwingViewIT extends AssertJSwingJUnitTestCase {
 		musicianRepository.saveMusician(new Musician("2", "anotherMusician"));
 		GuiActionRunner.execute(() -> controller.allMusicians());
 		assertThat(window.list("musicians").contents()).containsExactly("1 - aMusician", "2 - anotherMusician");
+	}
+
+	@Test
+	@GUITest
+	public void testAddMusicianButtonSucces() {
+		window.textBox("idMusician").enterText("1");
+		window.textBox("nameMusician").enterText("newMusician");
+		window.button(JButtonMatcher.withText("Add Musician")).click();
+		assertThat(window.list("musicians").contents()).containsExactly("1 - newMusician");
+	}
+
+	@Test
+	@GUITest
+	public void testAddMusicianButtonErrorDuplicateMusicianId() {
+		musicianRepository.saveMusician(new Musician("1", "existingMusician"));
+		window.textBox("idMusician").enterText("1");
+		window.textBox("nameMusician").enterText("newMusician");
+		window.button(JButtonMatcher.withText("Add Musician")).click();
+		assertThat(window.list("musicians").contents()).isEmpty();
+		window.label("error").requireText("Already exist a musician with id 1: 1 - existingMusician");
 	}
 
 }
