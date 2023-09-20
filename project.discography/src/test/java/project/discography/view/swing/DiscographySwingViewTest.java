@@ -374,4 +374,20 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		window.label("error").requireText("Error message: 1 - existingMusician");
 	}
 
+	@Test
+	public void testShowErrorMusicianNotFound() {
+		Musician aMusician = new Musician("1", "aMusician");
+		Musician notFound = new Musician("2", "notFound");
+		Album anAlbum = new Album("A", "anAlbum", "2");
+		GuiActionRunner.execute(() -> {
+			view.getMusicianListModel().addElement(aMusician);
+			view.getMusicianListModel().addElement(notFound);
+			view.getAlbumListModel().addElement(anAlbum);
+		});
+		GuiActionRunner.execute(() -> view.showErrorMusicianNotFound("Error message", notFound));
+		assertThat(window.list("musicians").contents()).containsExactly("1 - aMusician");
+		assertThat(window.list("albums").contents()).isEmpty();
+		window.label("error").requireText("Error message: 2 - notFound");
+	}
+
 }

@@ -378,7 +378,8 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 		labelError.setText(" ");
 	}
 
-	private void removeAlbumsfromList() {
+	private void removeMusician(Musician musician) {
+		musicianListModel.removeElement(musician);
 		albumListModel.clear();
 	}
 
@@ -400,14 +401,14 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 
 	@Override
 	public void musicianRemoved(Musician removed) {
-		musicianListModel.removeElement(removed);
-		removeAlbumsfromList();
+		removeMusician(removed);
+		resetErrorLabel();
 	}
 
 	@Override
 	public void showErrorMusicianNotFound(String message, Musician selectedMusician) {
-		// TODO Auto-generated method stub
-
+		labelError.setText(message + ": " + displayMusician(selectedMusician));
+		removeMusician(selectedMusician);
 	}
 
 	@Override
