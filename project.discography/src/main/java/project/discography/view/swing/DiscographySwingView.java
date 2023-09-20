@@ -466,8 +466,8 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 
 	@Override
 	public void albumUpdated(Album toUpdate, Album updated) {
-		// TODO Auto-generated method stub
-
+		albumListModel.set(albumListModel.indexOf(toUpdate), updated);
+		resetErrorLabel();
 	}
 
 }

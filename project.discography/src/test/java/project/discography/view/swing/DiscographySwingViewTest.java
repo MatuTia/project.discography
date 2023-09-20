@@ -420,4 +420,16 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		window.label("error").requireText(" ");
 	}
 
+	@Test
+	public void testAlbumUpdatedShouldUpdateTitleAlbumAndResetErrorLabel() {
+		Album toUpdate = new Album("A", "toUpdate", "1");
+		Album updated = new Album("A", "updated", "1");
+		GuiActionRunner.execute(() -> {
+			view.getAlbumListModel().addElement(toUpdate);
+		});
+		GuiActionRunner.execute(() -> view.albumUpdated(toUpdate, updated));
+		assertThat(window.list("albums").contents()).containsExactly("A - updated - 1");
+		window.label("error").requireText(" ");
+	}
+
 }
