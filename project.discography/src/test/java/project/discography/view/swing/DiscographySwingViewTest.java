@@ -432,4 +432,10 @@ public class DiscographySwingViewTest extends AssertJSwingJUnitTestCase {
 		window.label("error").requireText(" ");
 	}
 
+	@Test
+	public void testShowErrorDuplicateAlbumIdShouldShowErrorWitExistingAlbumData() {
+		GuiActionRunner.execute(() -> view.showErrorDuplicateAlbumId("Error message", new Album("A", "existingAlbum", "1")));
+		window.label("error").requireText("Error message: A - existingAlbum - 1");
+	}
+
 }

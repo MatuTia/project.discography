@@ -448,8 +448,7 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 
 	@Override
 	public void showErrorDuplicateAlbumId(String message, Album existingAlbum) {
-		// TODO Auto-generated method stub
-
+		labelError.setText(message + ": " + displayAlbum(existingAlbum));
 	}
 
 	@Override
