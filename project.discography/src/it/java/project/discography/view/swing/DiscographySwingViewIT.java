@@ -266,4 +266,49 @@ public class DiscographySwingViewIT extends AssertJSwingJUnitTestCase {
 		window.label("error").requireText("Not exist an album with id A: A - toDelete - 1");
 	}
 
+	@Test
+	@GUITest
+	public void testUpdateAlbumButtonSucces() {
+		GuiActionRunner.execute(() -> {
+			Musician musician = new Musician("1", "aMusician");
+			controller.newMusician(musician);
+			controller.newAlbum(musician, new Album("A", "toUpdate", "1"));
+		});
+		window.list("musicians").selectItem(0);
+		window.list("albums").selectItem(0);
+		window.textBox("titleAlbum").enterText("updated");
+		window.button(JButtonMatcher.withText("Update Album")).click();
+		assertThat(window.list("musicians").contents()).containsExactly("1 - aMusician");
+		assertThat(window.list("albums").contents()).containsExactly("A - updated - 1");
+	}
+
+	@Test
+	@GUITest
+	public void testUpdateAlbumButtonErrorNotFoundMusician() {
+		GuiActionRunner.execute(() -> controller.newMusician(new Musician("1", "aMusician")));
+		window.list("musicians").selectItem(0);
+		GuiActionRunner.execute(() -> view.getAlbumListModel().addElement(new Album("A", "toUpdate", "1")));
+		musicianRepository.deleteMusician("1");
+		window.list("albums").selectItem(0);
+		window.textBox("titleAlbum").enterText("updated");
+		window.button(JButtonMatcher.withText("Update Album")).click();
+		assertThat(window.list("musicians").contents()).isEmpty();
+		assertThat(window.list("albums").contents()).isEmpty();
+		window.label("error").requireText("Not exist a musician with id 1: 1 - aMusician");
+	}
+
+	@Test
+	@GUITest
+	public void testUpdateAlbumButtonErrorNotFoundAlbum() {
+		GuiActionRunner.execute(() -> controller.newMusician(new Musician("1", "aMusician")));
+		window.list("musicians").selectItem(0);
+		GuiActionRunner.execute(() -> view.getAlbumListModel().addElement(new Album("A", "toUpdate", "1")));
+		window.list("albums").selectItem(0);
+		window.textBox("titleAlbum").enterText("updated");
+		window.button(JButtonMatcher.withText("Update Album")).click();
+		assertThat(window.list("musicians").contents()).containsExactly("1 - aMusician");
+		assertThat(window.list("albums").contents()).isEmpty();
+		window.label("error").requireText("Not exist an album with id A: A - toUpdate - 1");
+	}
+
 }
