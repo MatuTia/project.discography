@@ -16,6 +16,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 
 import project.discography.controller.DiscographyController;
+import project.discography.model.Album;
 import project.discography.model.Musician;
 import project.discography.repository.AlbumRepository;
 import project.discography.repository.MusicianRepository;
@@ -95,6 +96,15 @@ public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
 		window.textBox("nameMusician").enterText("updated");
 		window.button(JButtonMatcher.withText("Update Musician")).click();
 		assertThat(musicianRepository.findMusicianById("1")).isEqualTo(new Musician("1", "updated"));
+	}
+
+	@Test
+	public void testAddAlbum() {
+		selectNewMusician("1", "aMusician");
+		window.textBox("idAlbum").enterText("A");
+		window.textBox("titleAlbum").enterText("newAlbum");
+		window.button(JButtonMatcher.withText("Add Album")).click();
+		assertThat(albumRepository.findAlbumById("A")).isEqualTo(new Album("A", "newAlbum", "1"));
 	}
 
 	private void selectNewMusician(String id, String name) {
