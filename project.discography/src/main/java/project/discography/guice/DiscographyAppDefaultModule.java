@@ -19,6 +19,33 @@ public class DiscographyAppDefaultModule extends AbstractModule {
 	private String databaseName = "discography";
 	private String albumCollectionName = "album";
 	private String musicianCollectionName = "musician";
+	
+	public DiscographyAppDefaultModule mongoHost(String mongoHost) {
+		this.mongoHost = mongoHost;
+		return this;
+	}
+
+	public DiscographyAppDefaultModule mongoPort(int mongoPort) {
+		this.mongoPort = mongoPort;
+		return this;
+	}
+
+	public DiscographyAppDefaultModule databaseName(String databaseName) {
+		this.databaseName = databaseName;
+		return this;
+
+	}
+
+	public DiscographyAppDefaultModule mongoMusicianCollectionName(String musicianCollectionName) {
+		this.musicianCollectionName = musicianCollectionName;
+		return this;
+
+	}
+
+	public DiscographyAppDefaultModule mongoAlbumCollectionName(String albumCollectionName) {
+		this.albumCollectionName = albumCollectionName;
+		return this;
+	}
 
 	@Override
 	protected void configure() {
