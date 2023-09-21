@@ -63,9 +63,14 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 	public DiscographyController getController() {
 		return controller;
 	}
-	
+
 	public void setController(DiscographyController controller) {
 		this.controller = controller;
+	}
+
+	public void start() {
+		setVisible(true);
+		controller.allMusicians();
 	}
 
 	public DiscographySwingView() {

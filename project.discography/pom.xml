@@ -15,6 +15,7 @@
 		<guice>7.0.0</guice>
 		<junit>4.13.2</junit>
 		<mockito>4.9.0</mockito>
+		<picocli>4.7.5</picocli>
 		<cucumber>7.14.0</cucumber>
 		<mongo.driver>3.12.9</mongo.driver>
 		<mongo.server>1.43.0</mongo.server>
@@ -79,6 +80,11 @@
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-assistedinject</artifactId>
 			<version>${guice}</version>
+		</dependency>
+		<dependency>
+			<groupId>info.picocli</groupId>
+			<artifactId>picocli</artifactId>
+			<version>${picocli}</version>
 		</dependency>
 
 		<dependency>

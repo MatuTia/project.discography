@@ -6,7 +6,7 @@ import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "src/bdd/resources", plugin = "pretty", dryRun = true)
+@CucumberOptions(features = "src/bdd/resources", plugin = "pretty")
 public class DiscographyAppBDD {
 
 }
