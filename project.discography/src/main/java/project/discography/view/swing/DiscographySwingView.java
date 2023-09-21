@@ -60,6 +60,10 @@ public class DiscographySwingView extends JFrame implements DiscographyView {
 		return albumListModel;
 	}
 
+	public DiscographyController getController() {
+		return controller;
+	}
+	
 	public void setController(DiscographyController controller) {
 		this.controller = controller;
 	}
