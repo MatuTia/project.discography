@@ -6,11 +6,14 @@ import java.util.stream.StreamSupport;
 
 import org.bson.Document;
 
+import com.google.inject.Inject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 
+import project.discography.guice.DatabaseName;
+import project.discography.guice.MusicianCollectionName;
 import project.discography.model.Musician;
 import project.discography.repository.MusicianRepository;
 
@@ -21,7 +24,9 @@ public class MusicianMongoRepository implements MusicianRepository {
 
 	private MongoCollection<Document> collection;
 
-	public MusicianMongoRepository(MongoClient client, String databaseName, String collectionName) {
+	@Inject
+	public MusicianMongoRepository(MongoClient client, @DatabaseName String databaseName,
+			@MusicianCollectionName String collectionName) {
 		collection = client.getDatabase(databaseName).getCollection(collectionName);
 	}
 
