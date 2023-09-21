@@ -6,11 +6,14 @@ import java.util.stream.StreamSupport;
 
 import org.bson.Document;
 
+import com.google.inject.Inject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 
+import project.discography.guice.AlbumCollectionName;
+import project.discography.guice.DatabaseName;
 import project.discography.model.Album;
 import project.discography.repository.AlbumRepository;
 
@@ -22,7 +25,9 @@ public class AlbumMongoRepository implements AlbumRepository {
 
 	private MongoCollection<Document> collection;
 
-	public AlbumMongoRepository(MongoClient client, String databaseName, String collectionName) {
+	@Inject
+	public AlbumMongoRepository(MongoClient client, @DatabaseName String databaseName,
+			@AlbumCollectionName String collectionName) {
 		collection = client.getDatabase(databaseName).getCollection(collectionName);
 	}
 

@@ -12,6 +12,7 @@
 		<maven.compiler.target>8</maven.compiler.target>
 		<myArgLine></myArgLine>
 		<slf4j>2.0.7</slf4j>
+		<guice>7.0.0</guice>
 		<junit>4.13.2</junit>
 		<mockito>4.9.0</mockito>
 		<cucumber>7.14.0</cucumber>
@@ -33,7 +34,8 @@
 
 		<sonar.coverage.exclusions>
 			**/model/*.*,
-			**/app/*.*
+			**/app/*.*,
+			**/guice/*.*
 		</sonar.coverage.exclusions>
 
 		<sonar.junit.reportPaths>
@@ -67,6 +69,16 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>${slf4j}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>${guice}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.inject.extensions</groupId>
+			<artifactId>guice-assistedinject</artifactId>
+			<version>${guice}</version>
 		</dependency>
 
 		<dependency>
@@ -242,6 +254,7 @@
 						<excludes>
 							<exclude>**/model/**</exclude>
 							<exclude>**/app/**</exclude>
+							<exclude>**/guice/**</exclude>
 						</excludes>
 					</configuration>
 					<executions>
