@@ -19,30 +19,24 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.Provides;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.Module;
+import com.google.inject.util.Modules;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 
 import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import project.discography.controller.DiscographyController;
-import project.discography.guice.AlbumCollectionName;
 import project.discography.guice.DatabaseName;
-import project.discography.guice.DiscographyControllerFactory;
-import project.discography.guice.MusicianCollectionName;
+import project.discography.guice.DiscographyAppDefaultModule;
 import project.discography.model.Album;
 import project.discography.model.Musician;
 import project.discography.repository.AlbumRepository;
 import project.discography.repository.MusicianRepository;
-import project.discography.repository.mongo.AlbumMongoRepository;
-import project.discography.repository.mongo.MusicianMongoRepository;
 
 @RunWith(GUITestRunner.class)
 public class DiscographySwingViewIT extends AssertJSwingJUnitTestCase {
 
-	private static final String ALBUM = "album";
-	private static final String MUSICIAN = "musician";
 	private static final String DISCOGRAPHY = "discography";
 	private static MongoServer server;
 	private static InetSocketAddress address;
@@ -71,31 +65,16 @@ public class DiscographySwingViewIT extends AssertJSwingJUnitTestCase {
 	@Override
 	protected void onSetUp() throws Exception {
 
-		final Injector injector = Guice.createInjector(new AbstractModule() {
+		final Module moduleForTesting = Modules.override(new DiscographyAppDefaultModule()).with(new AbstractModule() {
 
 			@Override
 			protected void configure() {
 				bind(String.class).annotatedWith(DatabaseName.class).toInstance(DISCOGRAPHY);
-				bind(String.class).annotatedWith(MusicianCollectionName.class).toInstance(MUSICIAN);
-				bind(String.class).annotatedWith(AlbumCollectionName.class).toInstance(ALBUM);
-
 				bind(MongoClient.class).toInstance(new MongoClient(new ServerAddress(address)));
-
-				bind(MusicianRepository.class).to(MusicianMongoRepository.class);
-				bind(AlbumRepository.class).to(AlbumMongoRepository.class);
-
-				install(new FactoryModuleBuilder().implement(DiscographyController.class, DiscographyController.class)
-						.build(DiscographyControllerFactory.class));
 			}
-			
-			@Provides
-			DiscographySwingView view(DiscographyControllerFactory factory) {
-				DiscographySwingView view = new DiscographySwingView();
-				view.setController(factory.create(view));
-				return view;
-			}
-
 		});
+
+		final Injector injector = Guice.createInjector(moduleForTesting);
 
 		view = GuiActionRunner.execute(() -> {
 			injector.injectMembers(this);
