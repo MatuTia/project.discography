@@ -19,11 +19,12 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
 import com.mongodb.MongoClient;
-import com.mongodb.ServerAddress;
 
 import project.discography.controller.DiscographyController;
 import project.discography.guice.DatabaseName;
 import project.discography.guice.DiscographyAppDefaultModule;
+import project.discography.guice.MongoHost;
+import project.discography.guice.MongoPort;
 import project.discography.model.Album;
 import project.discography.model.Musician;
 import project.discography.repository.AlbumRepository;
@@ -69,8 +70,8 @@ public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
 			@Override
 			protected void configure() {
 				bind(String.class).annotatedWith(DatabaseName.class).toInstance(DISCOGRAPHY);
-				bind(MongoClient.class)
-						.toInstance(new MongoClient(new ServerAddress(mongo.getHost(), mongo.getFirstMappedPort())));
+				bind(String.class).annotatedWith(MongoHost.class).toInstance(mongo.getHost());
+				bind(Integer.class).annotatedWith(MongoPort.class).toInstance(mongo.getFirstMappedPort());
 			}
 		});
 
