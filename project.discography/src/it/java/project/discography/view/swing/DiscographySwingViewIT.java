@@ -27,7 +27,6 @@ import com.mongodb.ServerAddress;
 import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import project.discography.controller.DiscographyController;
-import project.discography.guice.DatabaseName;
 import project.discography.guice.DiscographyAppDefaultModule;
 import project.discography.model.Album;
 import project.discography.model.Musician;
@@ -65,14 +64,14 @@ public class DiscographySwingViewIT extends AssertJSwingJUnitTestCase {
 	@Override
 	protected void onSetUp() throws Exception {
 
-		final Module moduleForTesting = Modules.override(new DiscographyAppDefaultModule()).with(new AbstractModule() {
+		final Module moduleForTesting = Modules.override(new DiscographyAppDefaultModule().databaseName(DISCOGRAPHY))
+				.with(new AbstractModule() {
 
-			@Override
-			protected void configure() {
-				bind(String.class).annotatedWith(DatabaseName.class).toInstance(DISCOGRAPHY);
-				bind(MongoClient.class).toInstance(new MongoClient(new ServerAddress(address)));
-			}
-		});
+					@Override
+					protected void configure() {
+						bind(MongoClient.class).toInstance(new MongoClient(new ServerAddress(address)));
+					}
+				});
 
 		final Injector injector = Guice.createInjector(moduleForTesting);
 

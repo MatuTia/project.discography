@@ -12,19 +12,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.testcontainers.containers.MongoDBContainer;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.Module;
-import com.google.inject.util.Modules;
 import com.mongodb.MongoClient;
 
 import project.discography.controller.DiscographyController;
-import project.discography.guice.DatabaseName;
 import project.discography.guice.DiscographyAppDefaultModule;
-import project.discography.guice.MongoHost;
-import project.discography.guice.MongoPort;
 import project.discography.model.Album;
 import project.discography.model.Musician;
 import project.discography.repository.AlbumRepository;
@@ -65,17 +59,8 @@ public class ModelViewControllerIT extends AssertJSwingJUnitTestCase {
 	@Override
 	protected void onSetUp() throws Exception {
 
-		final Module moduleForTesting = Modules.override(new DiscographyAppDefaultModule()).with(new AbstractModule() {
-
-			@Override
-			protected void configure() {
-				bind(String.class).annotatedWith(DatabaseName.class).toInstance(DISCOGRAPHY);
-				bind(String.class).annotatedWith(MongoHost.class).toInstance(mongo.getHost());
-				bind(Integer.class).annotatedWith(MongoPort.class).toInstance(mongo.getFirstMappedPort());
-			}
-		});
-
-		final Injector injector = Guice.createInjector(moduleForTesting);
+		final Injector injector = Guice.createInjector(new DiscographyAppDefaultModule().mongoHost(mongo.getHost())
+				.mongoPort(mongo.getFirstMappedPort()).databaseName(DISCOGRAPHY));
 
 		view = GuiActionRunner.execute(() -> {
 			injector.injectMembers(this);
