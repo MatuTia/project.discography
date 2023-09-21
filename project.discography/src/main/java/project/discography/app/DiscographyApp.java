@@ -5,9 +5,12 @@ import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.inject.Guice;
+
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+import project.discography.guice.DiscographyAppDefaultModule;
 import project.discography.view.swing.DiscographySwingView;
 
 @Command(mixinStandardHelpOptions = true)
@@ -36,8 +39,9 @@ public class DiscographyApp implements Callable<Void> {
 	public Void call() throws Exception {
 		EventQueue.invokeLater(() -> {
 			try {
-				DiscographySwingView frame = new DiscographySwingView();
-				frame.setVisible(true);
+				Guice.createInjector(new DiscographyAppDefaultModule().mongoHost(mongoHost).mongoPort(mongoPort)
+						.databaseName(databaseName).musicianCollectionName(musicianCollectionName)
+						.albumCollectionName(albumCollectionName)).getInstance(DiscographySwingView.class).start();
 			} catch (Exception e) {
 				Logger.getLogger("DiscographyApp").log(Level.SEVERE, "Exception", e);
 			}

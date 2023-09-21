@@ -36,13 +36,13 @@ public class DiscographyAppDefaultModule extends AbstractModule {
 
 	}
 
-	public DiscographyAppDefaultModule mongoMusicianCollectionName(String musicianCollectionName) {
+	public DiscographyAppDefaultModule musicianCollectionName(String musicianCollectionName) {
 		this.musicianCollectionName = musicianCollectionName;
 		return this;
 
 	}
 
-	public DiscographyAppDefaultModule mongoAlbumCollectionName(String albumCollectionName) {
+	public DiscographyAppDefaultModule albumCollectionName(String albumCollectionName) {
 		this.albumCollectionName = albumCollectionName;
 		return this;
 	}
