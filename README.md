@@ -1,0 +1,10 @@
+# project.discography
+Progetto per il corso di advanced programming technique
+
+[![Build CI with Maven on Linux](https://github.com/MatuTia/project.discography/actions/workflows/Linux.yml/badge.svg?branch=main)](https://github.com/MatuTia/project.discography/actions/workflows/Linux.yml) [![Build CI with Maven on Windows](https://github.com/MatuTia/project.discography/actions/workflows/Windows.yml/badge.svg)](https://github.com/MatuTia/project.discography/actions/workflows/Windows.yml) [![Build CI with Maven on MacOS](https://github.com/MatuTia/project.discography/actions/workflows/MacOS.yml/badge.svg?branch=main)](https://github.com/MatuTia/project.discography/actions/workflows/MacOS.yml)
+
+[![Mutation Testing](https://github.com/MatuTia/project.discography/actions/workflows/Pitest.yml/badge.svg)](https://github.com/MatuTia/project.discography/actions/workflows/Pitest.yml)
+
+[![Coveralls](https://github.com/MatuTia/project.discography/actions/workflows/Coveralls.yml/badge.svg)](https://github.com/MatuTia/project.discography/actions/workflows/Coveralls.yml) [![Coverage Status](https://coveralls.io/repos/github/MatuTia/project.discography/badge.svg?branch=main)](https://coveralls.io/github/MatuTia/project.discography?branch=main)
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=MatuTia_project.discography&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=MatuTia_project.discography) [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=MatuTia_project.discography&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=MatuTia_project.discography) [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=MatuTia_project.discography&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=MatuTia_project.discography) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=MatuTia_project.discography&metric=coverage)](https://sonarcloud.io/summary/new_code?id=MatuTia_project.discography)
