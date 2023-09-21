@@ -14,11 +14,11 @@ import project.discography.view.swing.DiscographySwingView;
 
 public class DiscographyAppDefaultModule extends AbstractModule {
 
-	String mongoHost = "localhost";
-	int mongoPort = 27017;
-	String databaseName = "discography";
-	String albumCollectionName = "album";
-	String musicianCollectionName = "musician";
+	private String mongoHost = "localhost";
+	private int mongoPort = 27017;
+	private String databaseName = "discography";
+	private String albumCollectionName = "album";
+	private String musicianCollectionName = "musician";
 
 	@Override
 	protected void configure() {
