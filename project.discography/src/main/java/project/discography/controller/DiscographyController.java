@@ -1,5 +1,8 @@
 package project.discography.controller;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+
 import project.discography.model.Album;
 import project.discography.model.Musician;
 import project.discography.repository.AlbumRepository;
@@ -12,7 +15,8 @@ public class DiscographyController {
 	private MusicianRepository musicianRepository;
 	private AlbumRepository albumRepository;
 
-	public DiscographyController(DiscographyView view, MusicianRepository musicianRepository,
+	@Inject
+	public DiscographyController(@Assisted DiscographyView view, MusicianRepository musicianRepository,
 			AlbumRepository albumRepository) {
 		this.view = view;
 		this.musicianRepository = musicianRepository;
